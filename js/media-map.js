@@ -199,24 +199,24 @@ const DD_ASSETS = {
       id:          "cat-sarees",
       title:       "Sarees",
       slug:        "sarees",
-      cover:       null,            // ← no photo yet; shows gradient placeholder
+      cover:       null,
       coverAlt:    "Saree collection at Durga Designs Birmingham",
       description: "Elegant sarees in silk, georgette, chiffon and more.",
       link:        "collections.html?cat=sarees",
       cta:         "Enquire on WhatsApp",
-      active:      true,
+      active:      false,            // hidden until saree photos are available
       order:       5
     },
     {
       id:          "cat-kids",
       title:       "Kids Collection",
       slug:        "kids",
-      cover:       null,            // ← no photo yet; shows gradient placeholder
+      cover:       null,
       coverAlt:    "Kids Asian fashion collection at Durga Designs Birmingham",
       description: "Adorable traditional and modern outfits for girls and boys.",
       link:        "collections.html?cat=kids",
       cta:         "View Collection",
-      active:      true,
+      active:      false,            // hidden until kids photos are available
       order:       6
     },
     {

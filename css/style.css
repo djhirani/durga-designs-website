@@ -2816,3 +2816,109 @@ section, [id], .section-pad, .page-hero {
 .page-contact  {}  /* WA button hidden via rule #3 above */
 .page-delivery {}
 .page-about    {}
+
+/* ════════════════════════════════════════════════════════════════
+   FINAL CLEANUP v5 — Pre-domain launch fixes
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── 1. CTA Banner: remove oval glow, clean rectangular ─────────
+   The radial-gradient ellipse was creating a "giant gold oval".
+   Replace with subtle horizontal gold border lines instead.      */
+.cta-banner,
+section.cta-banner {
+  background: linear-gradient(180deg, #05101E 0%, #0A1825 100%);
+  border-top:    1px solid rgba(212,175,55,0.22);
+  border-bottom: 1px solid rgba(212,175,55,0.22);
+  position: relative;
+  overflow: hidden;
+}
+/* Kill the oval */
+.cta-banner::before { display: none !important; }
+/* Subtle gold top accent line */
+.cta-banner::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent);
+  pointer-events: none;
+}
+.cta-banner-content   { position: relative; z-index: 1; }
+.cta-banner h2        { color: var(--heading-parchment); }
+.cta-banner p         { color: var(--text-on-dark); }
+
+/* ── 2. Product card background: warm cream not pale lavender ──── */
+.product-card-img {
+  background: linear-gradient(145deg, #F4EDE2 0%, #EDE5D8 100%);
+}
+
+/* ── 3. Checkbox: guaranteed flex layout ─────────────────────── */
+label.form-checkbox,
+.form-checkbox {
+  display:     flex !important;
+  flex-wrap:   nowrap !important;
+  align-items: flex-start !important;
+  gap:         0.6rem !important;
+  font-size:   0.82rem;
+  line-height: 1.55;
+  color:       #6D6457;
+}
+label.form-checkbox input[type="checkbox"],
+.form-checkbox    input[type="checkbox"] {
+  width:      17px !important;
+  height:     17px !important;
+  min-width:  17px !important;
+  margin-top: 0.15rem !important;
+  flex-shrink: 0 !important;
+  accent-color: #0A1B33;
+  cursor: pointer;
+}
+label.form-checkbox span,
+.form-checkbox    span { flex: 1; }
+.form-checkbox a { color: #0A1B33; font-weight: 600; text-decoration: underline; }
+
+/* ── 4. Delivery bullets: normal wrapping, no grid/table ─────── */
+.info-list li {
+  display:     flex !important;
+  flex-wrap:   wrap !important;
+  align-items: baseline !important;
+  gap:         0 0.4rem;
+  font-size:   0.9rem;
+  color:       #6D6457;
+  line-height: 1.65;
+}
+.info-list li::before {
+  flex-shrink: 0;
+  margin-top:  0.5rem;
+}
+
+/* ── 5. Remove pale placeholder background from category cards ── */
+.category-card-img {
+  background: linear-gradient(145deg, #0d1e35 0%, #152844 100%);
+}
+
+/* ── 6. About + Delivery: reduce remaining excess gaps ──────────  */
+/* About page */
+.about-grid       { gap: 2rem; }
+.values-grid      { gap: 0.85rem; }
+.value-item       { gap: 0.85rem; }
+.about-img        { aspect-ratio: 4/3; }
+
+/* Delivery page */
+.info-card        { padding: 1.6rem; margin-bottom: 0.85rem; }
+.info-card h3     { margin-bottom: 1rem; padding-bottom: 0.75rem; }
+
+/* Misha Tailoring: service → process gap */
+.services-grid    { gap: 0.9rem; margin-top: 2rem; }
+.process-steps    { margin-top: 1.5rem; }
+
+/* Generic: tighten section-pad on content-heavy pages */
+.page-about  .section-pad,
+.page-delivery .section-pad { padding: 3.5rem 0; }
+
+/* ── 7. Footer social: ensure no stray active social links ────── */
+.footer-social a[href*="facebook.com"],
+.footer-social a[href*="instagram.com"],
+.footer-social a[href*="tiktok.com"] {
+  display: none !important;
+}
