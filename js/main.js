@@ -86,35 +86,78 @@ document.querySelectorAll('[data-wa-product]').forEach(el => {
   });
 })();
 
-// ── Enquiry Form Submission ────────────────────────────────
+// ── Enquiry Form — WhatsApp · Email · Call ─────────────────
 (function initEnquiryForm() {
   const form = document.getElementById('enquiryForm');
   if (!form) return;
+
+  // Track which submit button the visitor clicked
+  let chosenAction = 'whatsapp';
+  form.querySelectorAll('button[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => { chosenAction = btn.dataset.action; });
+  });
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
     const data    = new FormData(form);
-    const name    = data.get('name') || '';
-    const phone   = data.get('phone') || '';
-    const item    = data.get('item') || 'General enquiry';
-    const message = data.get('message') || '';
+    const name    = (data.get('name')    || '').trim();
+    const phone   = (data.get('phone')   || '').trim();
+    const emailVal= (data.get('email')   || '').trim();
+    const item    = data.get('item')     || 'General enquiry';
+    const message = (data.get('message') || '').trim();
 
-    const waMsg = `Hi Durga Designs, my name is ${name}. ` +
-      `I am enquiring about: ${item}. ${message ? message + ' ' : ''}` +
-      `My contact number is: ${phone}.`;
-
-    const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`;
-
-    // Show success message
     const successBox = document.getElementById('formSuccess');
-    if (successBox) {
-      form.style.display = 'none';
-      successBox.classList.add('visible');
-    }
 
-    // Open WhatsApp after short delay
-    setTimeout(() => window.open(waUrl, '_blank'), 600);
+    if (chosenAction === 'email') {
+      // ── Email channel ─────────────────────────────────────
+      const subject  = 'Enquiry from Durga Designs website';
+      const bodyParts = [
+        `Name: ${name}`,
+        `Phone / WhatsApp: ${phone}`,
+        emailVal  ? `Email: ${emailVal}` : '',
+        `Enquiry about: ${item}`,
+        message   ? `\nMessage:\n${message}` : '',
+        '\n---\nSent from durgadesigns.co.uk'
+      ].filter(Boolean).join('\n');
+
+      const mailtoUrl = `mailto:info@durgadesigns.co.uk` +
+        `?subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(bodyParts)}`;
+
+      if (successBox) {
+        form.style.display = 'none';
+        successBox.classList.add('visible');
+        const h = successBox.querySelector('h3');
+        const p = successBox.querySelector('p');
+        if (h) h.textContent = 'Your email is ready to send';
+        if (p) p.textContent = 'Your email app should open with the message ready. If it does not open automatically, please email us at info@durgadesigns.co.uk.';
+      }
+      // Use location.href so the mailto opens in the same tab context
+      setTimeout(() => { window.location.href = mailtoUrl; }, 350);
+
+    } else {
+      // ── WhatsApp channel ──────────────────────────────────
+      const msgParts = [
+        `Hi Durga Designs, my name is ${name}.`,
+        `I am enquiring about: ${item}.`,
+        message   || '',
+        `My contact number is: ${phone}.`,
+        emailVal  ? `My email: ${emailVal}.` : ''
+      ].filter(Boolean).join(' ');
+
+      const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msgParts)}`;
+
+      if (successBox) {
+        form.style.display = 'none';
+        successBox.classList.add('visible');
+        const h = successBox.querySelector('h3');
+        const p = successBox.querySelector('p');
+        if (h) h.textContent = 'Opening WhatsApp…';
+        if (p) p.textContent = 'Your message is ready. We will get back to you as soon as possible on WhatsApp.';
+      }
+      setTimeout(() => window.open(waUrl, '_blank'), 600);
+    }
   });
 })();
 
