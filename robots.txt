@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.durgadesigns.co.uk/sitemap.xml
+
+# No need to index image asset originals
+Disallow: /images/Durga-Designs-assets/
