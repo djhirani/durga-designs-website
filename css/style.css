@@ -2922,3 +2922,56 @@ label.form-checkbox span,
 .footer-social a[href*="tiktok.com"] {
   display: none !important;
 }
+
+/* ════════════════════════════════════════════════════════════════
+   URGENT FINAL FIXES v6
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Fix 1: Product card — dark bg while loading, never pale ────
+   Warm cream showed as "blank" before images loaded.
+   Dark navy is intentional-looking even before load.           */
+.product-card-img {
+  background: linear-gradient(145deg, #0e1e34 0%, #152643 100%) !important;
+}
+
+/* ── Fix 2: Kill the 600×600 gold circle on tailoring sections ──
+   .tailoring-feature::before creates a large gold radial circle
+   visible on About page and Misha Tailoring page as a yellow oval */
+.tailoring-feature::before  { display: none !important; }
+
+/* Also kill any residual CTA ellipse — belt-and-braces */
+.cta-banner::before         { display: none !important; }
+.hero::before               { opacity: 0.5; }
+
+/* ── Fix 3: Checkbox — guaranteed single flex row ───────────────
+   Text nodes/strong/a inside a flex label become separate flex
+   items and wrap per-word. Wrapping the text in a span fixes it. */
+.form-checkbox,
+label.form-checkbox {
+  display:     flex !important;
+  align-items: flex-start !important;
+  flex-wrap:   nowrap !important;
+  gap:         0.6rem !important;
+}
+.form-checkbox > input[type="checkbox"] {
+  flex:       0 0 17px !important;
+  width:      17px !important;
+  height:     17px !important;
+  margin-top: 0.18rem !important;
+  cursor:     pointer;
+  accent-color: #0A1B33;
+}
+/* The span wrapper (added in HTML) fills remaining width */
+.form-checkbox > span {
+  flex:        1 1 auto;
+  line-height: 1.6;
+  font-size:   0.82rem;
+  color:       #6D6457;
+}
+.form-checkbox > span strong { color: #0A1B33; font-weight: 700; }
+.form-checkbox > span a      {
+  color:           #0A1B33;
+  font-weight:     600;
+  text-decoration: underline;
+  white-space:     nowrap; /* "Privacy Policy" never splits across lines */
+}
