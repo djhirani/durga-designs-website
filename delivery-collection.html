@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" href="images/optimized/logo-small.png" />
   <link rel="apple-touch-icon" href="images/optimized/logo.png" />
 </head>
-<body>
+<body class="page-delivery">
 
 <a id="stickyWA" href="#" class="sticky-whatsapp" aria-label="WhatsApp Durga Designs">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -78,12 +78,36 @@
 <section class="section-pad">
   <div class="container" style="max-width:860px;">
 
-    <div class="highlight-box" style="margin-bottom:2.5rem;">
+  <!-- How It Works: 4-step process -->
+  <div class="order-steps" aria-label="How ordering works">
+    <div class="order-step">
+      <div class="order-step-num">1</div>
+      <h4>Ask on WhatsApp</h4>
+      <p>Message us about any product, fabric or tailoring enquiry.</p>
+    </div>
+    <div class="order-step">
+      <div class="order-step-num">2</div>
+      <h4>We Confirm</h4>
+      <p>We check availability and confirm the price with you.</p>
+    </div>
+    <div class="order-step">
+      <div class="order-step-num">3</div>
+      <h4>Visit or Arrange</h4>
+      <p>Collect in store or arrange local Birmingham delivery.</p>
+    </div>
+    <div class="order-step">
+      <div class="order-step-num">4</div>
+      <h4>Pay as Agreed</h4>
+      <p>Cash, bank transfer, or card (please confirm before visiting).</p>
+    </div>
+  </div>
+
+    <div class="highlight-box" style="margin-bottom:2rem;">
       <p><strong>How ordering works:</strong> Availability and price are confirmed before payment. WhatsApp us or complete an enquiry form — we will get back to you to confirm availability, price, and collection or delivery arrangements before finalising your order.</p>
     </div>
 
     <div class="info-card">
-      <h3><span class="icon">🏪</span> In-Store Collection</h3>
+      <h3><span class="icon icon-svg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> In-Store Collection</h3>
       <ul class="info-list">
         <li><strong>Visit us directly</strong> at Shop 606, Stratford Road, Sparkhill, Birmingham, B11 4AP to browse and purchase in person.</li>
         <li><strong>Reserve via WhatsApp:</strong> If you enquire about an item online, we will hold it for you once availability and price are confirmed.</li>
@@ -94,7 +118,7 @@
     </div>
 
     <div class="info-card">
-      <h3><span class="icon">🚗</span> Local Birmingham Delivery</h3>
+      <h3><span class="icon icon-svg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="9" cy="17" r="2"/><circle cx="19" cy="17" r="2"/></svg></span> Local Birmingham Delivery</h3>
       <ul class="info-list">
         <li>Local delivery within Birmingham may be available for certain orders — please ask when enquiring.</li>
         <li>Delivery availability, charge and timescale will be confirmed at the time of your order.</li>
@@ -104,16 +128,15 @@
     </div>
 
     <div class="info-card">
-      <h3><span class="icon">📦</span> UK Delivery</h3>
+      <h3><span class="icon icon-svg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span> UK Delivery</h3>
       <ul class="info-list">
-        <li>UK-wide postal delivery is currently being set up and will be available in the future.</li>
-        <li>For urgent UK delivery enquiries, please WhatsApp us to discuss options.</li>
+        <li><strong>UK postal delivery is not currently active as a standard service.</strong> Please WhatsApp us for urgent out-of-area enquiries and we will do our best to help.</li>
         <li>Any UK delivery charges and timescales will be confirmed before your order is placed.</li>
       </ul>
     </div>
 
     <div class="info-card">
-      <h3><span class="icon">✂️</span> Tailoring &amp; Alteration Orders</h3>
+      <h3><span class="icon icon-svg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span> Tailoring &amp; Alteration Orders</h3>
       <ul class="info-list">
         <li>All tailoring and alteration orders through Misha Tailoring require an <strong>in-person measurement visit</strong> to our Sparkhill boutique.</li>
         <li>Pricing for stitching and alterations is confirmed after the measurement consultation — not before.</li>
@@ -126,17 +149,16 @@
     </div>
 
     <div class="info-card">
-      <h3><span class="icon">💳</span> Payment Methods</h3>
+      <h3><span class="icon icon-svg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span> Payment Methods</h3>
       <ul class="info-list">
         <li><strong>Cash</strong> — accepted in store and on delivery.</li>
-        <li><strong>Bank transfer</strong> — details provided at point of order confirmation.</li>
-        <li><strong>Card payments</strong> — please ask in advance, as availability may vary.</li>
-        <li>Online payment will be introduced in a future update. We will confirm full details before that goes live.</li>
+        <li><strong>Bank transfer</strong> — account details shared at point of order confirmation.</li>
+        <li><strong>Card payment</strong> — may be available; please confirm before visiting.</li>
       </ul>
     </div>
 
     <div class="info-card">
-      <h3><span class="icon">🔄</span> Returns &amp; Refunds</h3>
+      <h3><span class="icon icon-svg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.36"/></svg></span> Returns &amp; Refunds</h3>
       <ul class="info-list">
         <li>For full details of our returns and refunds policy, please see our <a href="returns-refunds.html" style="color:var(--navy);font-weight:600;">Returns &amp; Refunds</a> page.</li>
         <li>Ready-made products purchased in-store may be eligible for return subject to our policy.</li>
@@ -165,12 +187,10 @@
         <span class="logo-main">Durga Designs</span>
         <span class="logo-sub">Misha Tailoring</span>
         <p>Premium South Asian fashion boutique in Sparkhill, Birmingham.</p>
-        <div class="footer-social">
-          <a href="https://www.facebook.com/durgadesignsbirmingham" target="_blank" rel="noopener" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-          <a href="https://www.instagram.com/durgadesignsbirmingham" target="_blank" rel="noopener" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-          <a href="https://www.tiktok.com/@durgadesignsbirmingham" target="_blank" rel="noopener" aria-label="TikTok"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.84 1.56V6.82a4.85 4.85 0 01-1.07-.13z"/></svg></a>
-          <a href="https://wa.me/447907975847" target="_blank" rel="noopener" aria-label="WhatsApp"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        <div class="footer-social" aria-label="Social media links">
+          <a href="https://wa.me/447907975847" target="_blank" rel="noopener" aria-label="WhatsApp Durga Designs"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
         </div>
+        <span class="social-coming-soon">@durgadesignsbirmingham — coming soon on Instagram &amp; TikTok</span>
       </div>
       <div class="footer-col"><h4>Collections</h4><nav class="footer-links"><a href="collections.html">All Collections</a><a href="collections.html?cat=ladies-suits">Ladies Suits</a><a href="collections.html?cat=sarees">Sarees</a><a href="collections.html?cat=abayas">Abayas</a></nav></div>
       <div class="footer-col"><h4>Information</h4><nav class="footer-links"><a href="about.html">About Us</a><a href="misha-tailoring.html">Misha Tailoring</a><a href="gallery.html">Gallery</a><a href="delivery-collection.html">Delivery</a><a href="contact.html">Contact</a></nav></div>

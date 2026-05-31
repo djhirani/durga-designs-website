@@ -175,6 +175,56 @@ document.querySelectorAll('[data-wa-product]').forEach(el => {
   if (stored === '0') document.body.classList.add('cookies-declined');
 })();
 
+// ── Gallery Lightbox ───────────────────────────────────────
+(function initLightbox() {
+  const items = document.querySelectorAll('.gallery-item');
+  if (!items.length) return;
+
+  function openLightbox(img) {
+    const lb = document.createElement('div');
+    lb.className = 'dd-lightbox';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.setAttribute('aria-label', 'Image viewer');
+
+    const full = document.createElement('img');
+    full.src = img.src;
+    full.alt = img.alt || 'Durga Designs gallery image';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'dd-lightbox-btn';
+    closeBtn.setAttribute('aria-label', 'Close image');
+    closeBtn.innerHTML = '✕';
+
+    if (img.dataset.caption || img.closest('.gallery-item')?.querySelector('.gallery-item-caption')?.textContent) {
+      const cap = document.createElement('div');
+      cap.className = 'dd-lightbox-caption';
+      cap.textContent = img.closest('.gallery-item')?.querySelector('.gallery-item-caption')?.textContent || '';
+      lb.appendChild(cap);
+    }
+
+    lb.appendChild(full);
+    lb.appendChild(closeBtn);
+    document.body.appendChild(lb);
+    document.body.style.overflow = 'hidden';
+
+    const close = () => { lb.remove(); document.body.style.overflow = ''; };
+    closeBtn.addEventListener('click', e => { e.stopPropagation(); close(); });
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+    }, { once: true });
+  }
+
+  items.forEach(item => {
+    item.style.cursor = 'zoom-in';
+    item.addEventListener('click', () => {
+      const img = item.querySelector('img');
+      if (img && img.naturalWidth > 0) openLightbox(img);
+    });
+  });
+})();
+
 // ── Smooth scroll to anchor ────────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function(e) {

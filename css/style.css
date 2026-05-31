@@ -2599,3 +2599,220 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   .form-card          { padding: 1.4rem; }
   .section-pad        { padding: 3.5rem 0; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   LAUNCH REFINEMENT v4 — Premium Polish Pass
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Inner-page hero: reduce height ~20% ──────────────────── */
+:root { --nav-h: 70px; }
+
+.page-hero {
+  padding: 6.25rem 0 3rem;          /* was 8rem 0 4.5rem */
+}
+@media (max-width: 768px) {
+  .page-hero { padding: 5.5rem 0 2.5rem; }
+}
+@media (max-width: 480px) {
+  .page-hero { padding: 5rem 0 2rem; }
+}
+
+/* ── 2. Sticky header: prevent sections hiding under nav ─────── */
+section, [id], .section-pad, .page-hero {
+  scroll-margin-top: calc(var(--nav-h) + 10px);
+}
+
+/* ── 3. Floating WA button: safer, smaller, hidden on contact ── */
+.sticky-whatsapp {
+  bottom: 1.25rem;
+  right: 1.25rem;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.84rem;
+  z-index: 800;
+}
+/* Hide on contact page (body.page-contact) */
+.page-contact .sticky-whatsapp { display: none !important; }
+/* Avoid overlapping bottom of gallery grid */
+@media (max-width: 768px) {
+  .sticky-whatsapp { bottom: 5rem; right: 0.9rem; padding: 0.75rem; }
+  .sticky-whatsapp .wa-label { display: none; }
+  body.cookies-accepted .sticky-whatsapp,
+  body.cookies-declined .sticky-whatsapp { bottom: 1.25rem; }
+}
+
+/* ── 4. Cookie banner: compact, non-intrusive ────────────────── */
+#cookieBanner {
+  padding: 0.5rem 1.25rem !important;
+  align-items: center;
+}
+#cookieBanner p  { font-size: 0.77rem !important; margin: 0; }
+#cookieBanner > div { gap: 0.4rem !important; }
+#cookieBanner button { padding: 0.32rem 0.85rem !important; font-size: 0.75rem !important; }
+
+/* ── 5. Premium SVG icon styling ─────────────────────────────── */
+.icon-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.icon-svg svg { display: block; }
+/* Icon color contexts */
+.why-icon .icon-svg svg   { color: var(--heading-gold); width: 24px; height: 24px; }
+.service-icon .icon-svg svg { color: var(--heading-gold); width: 22px; height: 22px; }
+.visit-detail-icon .icon-svg svg { color: var(--heading-gold); width: 18px; height: 18px; }
+.info-card h3 .icon-svg svg  { color: var(--heading-gold); width: 18px; height: 18px; }
+.contact-info-icon .icon-svg svg { color: var(--heading-gold); width: 16px; height: 16px; }
+.value-icon .icon-svg svg { width: 22px; height: 22px; color: var(--heading-gold); }
+
+/* ── 6. Footer: slightly more readable ───────────────────────── */
+.footer-brand p     { color: rgba(197,180,150,0.68); }
+.footer-links a     { color: rgba(197,180,150,0.66); }
+.footer-contact-item { color: rgba(197,180,150,0.66); font-size: 0.86rem; }
+.footer-bottom p    { color: rgba(175,162,135,0.48); }
+.footer-bottom-links a { color: rgba(175,162,135,0.50); }
+
+/* ── 7. Social "coming soon" pill ────────────────────────────── */
+.social-coming-soon {
+  font-size: 0.69rem;
+  color: rgba(197,180,150,0.38);
+  letter-spacing: 0.06em;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* ── 8. Hero store-front overlay — slightly more visible ─────── */
+#dd-hero-img img { opacity: 0.22; }
+
+/* ── 9. Navbar logo slightly larger ──────────────────────────── */
+.navbar-logo .logo-main img { height: 40px; }
+
+/* ── 10. Gallery lightbox ────────────────────────────────────── */
+.dd-lightbox {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(5,16,30,0.96);
+  display: flex; align-items: center; justify-content: center;
+  cursor: zoom-out;
+  animation: lbIn 0.2s ease both;
+}
+@keyframes lbIn { from { opacity:0; } to { opacity:1; } }
+.dd-lightbox img {
+  max-width: 90vw; max-height: 88vh;
+  object-fit: contain; border-radius: 8px;
+  cursor: default;
+  box-shadow: 0 16px 64px rgba(0,0,0,0.55);
+  animation: lbSlide 0.22s ease both;
+}
+@keyframes lbSlide { from { transform: scale(0.96); opacity:0; } to { transform: scale(1); opacity:1; } }
+.dd-lightbox-btn {
+  position: absolute; top: 1rem; right: 1rem;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(212,175,55,0.15);
+  border: 1px solid rgba(212,175,55,0.32);
+  color: #E6D3AD; font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.dd-lightbox-btn:hover { background: rgba(212,175,55,0.28); }
+.dd-lightbox-caption {
+  position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
+  color: rgba(230,211,173,0.7); font-size: 0.78rem; letter-spacing: 0.05em;
+  text-align: center;
+}
+
+/* ── 11. Delivery: "How It Works" steps ─────────────────────── */
+.order-steps {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 0.85rem;
+  margin-bottom: 2.5rem;
+}
+@media (min-width: 640px) { .order-steps { grid-template-columns: repeat(4,1fr); } }
+.order-step {
+  background: #fff; border: 1px solid rgba(10,27,51,0.07);
+  border-radius: 12px; padding: 1.25rem 0.9rem; text-align: center;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+.order-step::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2.5px;
+  background: linear-gradient(90deg, var(--heading-gold), #E6C765);
+  border-radius: 12px 12px 0 0;
+}
+.order-step-num {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg,#0A1B33,#163060);
+  color: var(--heading-gold); font-family: var(--font-heading);
+  font-size: 0.95rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 0.7rem;
+  border: 1.5px solid rgba(212,175,55,0.22);
+}
+.order-step h4 { font-size: 0.84rem; color: #0A1B33; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.01em; }
+.order-step p  { font-size: 0.76rem; color: #6D6457; margin: 0; line-height: 1.5; }
+
+/* ── 12. Form: photo note block ──────────────────────────────── */
+.form-photo-note {
+  background: rgba(212,175,55,0.06);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-left: 3px solid var(--heading-gold);
+  border-radius: 8px; padding: 0.85rem 1rem;
+  font-size: 0.82rem; color: #6D6457; line-height: 1.55;
+}
+.form-photo-note strong { color: #0A1B33; }
+
+/* ── 13. Checkbox: proper single-line inline layout ──────────── */
+.form-checkbox {
+  display: flex; gap: 0.6rem; align-items: flex-start;
+  font-size: 0.82rem; color: #6D6457; line-height: 1.55;
+}
+.form-checkbox input[type="checkbox"] {
+  width: 17px; height: 17px; min-width: 17px;
+  margin-top: 0.16rem; flex-shrink: 0; cursor: pointer;
+  accent-color: #0A1B33;
+}
+.form-checkbox a { color: #0A1B33; text-decoration: underline; }
+
+/* ── 14. Product/gallery image crops ─────────────────────────── */
+.product-card-img img  { object-position: top center; }
+.gallery-item img      { object-position: center; }
+
+/* ── 15. Reduce excessive vertical gaps ──────────────────────── */
+/* About page */
+.about-grid       { gap: 2.25rem; }
+.values-grid      { gap: 1rem; margin-top: 1.5rem; }
+
+/* Misha Tailoring: tighten service → process gap */
+.services-grid    { gap: 1rem; }
+.process-steps    { margin-top: 1.75rem; }
+
+/* Delivery page: tighten card spacing */
+.info-card        { margin-bottom: 1rem; }
+.section-pad-sm   { padding: 2.5rem 0; }
+
+/* ── 16. Placeholder category cards: textile pattern ────────── */
+.category-card-img .img-placeholder {
+  background:
+    repeating-linear-gradient(45deg, rgba(212,175,55,0.04) 0, rgba(212,175,55,0.04) 1px, transparent 1px, transparent 8px),
+    repeating-linear-gradient(-45deg, rgba(212,175,55,0.04) 0, rgba(212,175,55,0.04) 1px, transparent 1px, transparent 8px),
+    linear-gradient(145deg, #0d1e35 0%, #162844 100%);
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.5rem; opacity: 1;
+}
+.category-card-img .img-placeholder span { color: rgba(212,175,55,0.5); font-size: 0; }
+.category-card-img .img-placeholder::after {
+  content: 'Coming Soon';
+  font-family: var(--font-heading); font-size: 0.68rem;
+  color: rgba(212,175,55,0.45); letter-spacing: 0.14em; text-transform: uppercase;
+}
+
+/* ── 17. Mobile: form fields full-width ──────────────────────── */
+@media (max-width: 640px) {
+  .form-row  { grid-template-columns: 1fr !important; gap: 0; }
+  .form-card { padding: 1.4rem; }
+}
+
+/* ── 18. Page-specific body classes ──────────────────────────── */
+.page-contact  {}  /* WA button hidden via rule #3 above */
+.page-delivery {}
+.page-about    {}
