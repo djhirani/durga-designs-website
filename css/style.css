@@ -2999,3 +2999,137 @@ label.form-checkbox {
   .quick-bar-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
   .quick-item { width: 100%; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   DESKTOP LAYOUT IMPROVEMENTS — Fix narrow/compressed appearance
+   ════════════════════════════════════════════════════════════════
+   
+   ROOT CAUSE SUMMARY
+   ──────────────────
+   • --max-width was 1200px → at 1440px left 240px total wasted side space
+   • .hero-content was capped at 700px → only 58% of container used for text
+   • .cta-banner-content was capped at 600px → narrow CTA blocks
+   • No wide-screen padding override for 1400px+ viewports
+   • Container padding 1.25rem was only 20px each side
+   
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Wider container: 1200 → 1320px ──────────────────────────
+   Gives 60px side margins at 1440px (was 120px) — modern standard  */
+:root {
+  --max-width: 1320px;
+}
+
+/* ── 2. Responsive container padding ────────────────────────────
+   More breathing room on medium desktops; slightly more on wide   */
+.container {
+  padding: 0 1.5rem;   /* 24px each side (was 20px) */
+}
+@media (min-width: 1200px) {
+  .container { padding: 0 2rem; }    /* 32px at laptop+ */
+}
+@media (min-width: 1440px) {
+  .container { padding: 0 2.5rem; }  /* 40px at wide desktop */
+}
+
+/* ── 3. Hero content: wider text area on desktop ─────────────────
+   700px → 960px at desktop: text uses more of the hero canvas     */
+.hero-content {
+  max-width: 760px;  /* mobile baseline increase */
+}
+@media (min-width: 900px) {
+  .hero-content { max-width: 860px; }
+}
+@media (min-width: 1200px) {
+  .hero-content { max-width: 960px; }
+}
+
+/* ── 4. Hero background overlay: slightly more visible ──────────
+   0.22 → 0.28 so the store front adds depth without washing text  */
+#dd-hero-img img { opacity: 0.28; }
+
+/* ── 5. CTA banner content: wider text+button area ──────────────
+   600px → 820px so CTAs don't look squeezed in a wide dark section */
+.cta-banner-content {
+  max-width: 820px;
+}
+@media (min-width: 1200px) {
+  .cta-banner .section-label,
+  .cta-banner h2,
+  .cta-banner p { max-width: 100%; }
+}
+
+/* ── 6. Enquiry / Contact grid: two-column at 768px not 900px ───
+   Shows the form+info side-by-side earlier on medium desktops     */
+@media (min-width: 768px) {
+  .enquiry-grid { grid-template-columns: 58fr 42fr; }
+}
+
+/* ── 7. Tailoring section: wider gap and breathing room ─────────
+   3rem gap → 4rem at 1200px for better two-column balance         */
+@media (min-width: 1200px) {
+  .tailoring-grid { gap: 4.5rem; }
+}
+
+/* ── 8. Page hero: slightly more vertical presence on desktop ───
+   Ensures inner-page heroes feel spacious, not squashed           */
+@media (min-width: 1024px) {
+  .page-hero { padding: 7rem 0 4rem; }
+  .page-hero h1 { font-size: clamp(2.2rem, 3.5vw, 3.8rem); }
+}
+
+/* ── 9. Products grid: 4-col triggers at 960px (not 1000px) ────
+   Slightly earlier 4-col at common laptop widths                  */
+@media (min-width: 960px) {
+  .products-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── 10. Categories grid: 4-col at 960px ────────────────────────*/
+@media (min-width: 960px) {
+  .categories-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── 11. Why-grid: 4-col at 960px ───────────────────────────────*/
+@media (min-width: 960px) {
+  .why-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── 12. Services grid: 3-col at 900px, wider gap at 1200px ────*/
+@media (min-width: 1200px) {
+  .services-grid { gap: 1.25rem; }
+}
+
+/* ── 13. Gallery grid: 4-col at wider gap on desktop ───────────*/
+@media (min-width: 1200px) {
+  .gallery-grid { gap: 1rem; }
+}
+
+/* ── 14. Section-pad on desktop: slightly more spacious ─────────
+   4rem → 5.5rem ensures sections feel premium not cramped         */
+@media (min-width: 1024px) {
+  .section-pad { padding: 5.5rem 0; }
+  .section-pad-sm { padding: 3.5rem 0; }
+}
+
+/* ── 15. Hero stats row: more breathing room on desktop ─────────*/
+@media (min-width: 1024px) {
+  .hero-stats { gap: 3.5rem; }
+}
+
+/* ── 16. Prevent hero-content growing too wide on ultra-wide ────
+   Above 1600px, cap hero text at 1020px for readability          */
+@media (min-width: 1600px) {
+  .hero-content { max-width: 1020px; }
+  .container    { padding: 0 3rem; }
+}
+
+/* ── 17. Visit-grid / about-grid: align at 1024px ──────────────*/
+@media (min-width: 1024px) {
+  .visit-grid { gap: 4rem; }
+  .about-grid { gap: 3.5rem; }
+}
+
+/* ── 18. Enquiry form card: better desktop padding ──────────────*/
+@media (min-width: 1024px) {
+  .form-card { padding: 2.5rem; }
+}
