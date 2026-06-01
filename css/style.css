@@ -3703,3 +3703,122 @@ label.form-checkbox {
     display: none;           /* hide collage on tablet/mobile */
   }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE HERO PREMIUM OVERHAUL
+   Affects homepage (body.page-home) at ≤ 960px only.
+   Desktop hero (> 960px) is completely unchanged.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Mobile product strip — hidden on desktop ─────────────── */
+.hero-mobile-strip { display: none; }
+
+/* ── 2. Global mobile/tablet overrides ──────────────────────── */
+@media (max-width: 960px) {
+
+  /* ── Remove hero stats — they clutter mobile first impression ─ */
+  .hero-stats { display: none !important; }
+
+  /* ── Remove large margin below hero actions without stats ───── */
+  .page-home .hero-actions { margin-bottom: 1.25rem !important; }
+
+  /* ── Compact CTA buttons — still 44px+ tap target ───────────── */
+  .hero-btn-group .btn,
+  .hero-btn-group .btn-lg {
+    min-height: 46px;
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+  }
+  .hero-btn-group {
+    gap: 0.5rem;
+  }
+
+  /* ── Show the mobile product strip ──────────────────────────── */
+  .hero-mobile-strip {
+    display: flex;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 1.25rem 0 1rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Each product card ───────────────────────────────────────── */
+  .hms-card {
+    flex: 1 1 0;
+    aspect-ratio: 3 / 4;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1.5px solid rgba(212, 175, 55, 0.38);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(212,175,55,0.12);
+    background: #0e1d30; /* dark fallback while loading */
+  }
+
+  .hms-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  /* ── Card category label ─────────────────────────────────────── */
+  .hms-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(0deg, rgba(5,16,30,0.82) 0%, transparent 100%);
+    color: rgba(230, 211, 173, 0.92);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1rem 0.4rem 0.4rem;
+    display: block;
+  }
+
+  /* ── Tighten overall hero so content fills screen quickly ────── */
+  .page-home .hero {
+    min-height: auto;
+  }
+  .page-home .hero-content {
+    padding-top: 2rem;
+    padding-bottom: 0;
+  }
+
+  /* ── Hero tagline margin ─────────────────────────────────────── */
+  .hero-tagline { margin-bottom: 1.25rem !important; }
+  .hero-description { margin-bottom: 0.65rem !important; }
+}
+
+/* ── 3. Extra compact at 599px and below ─────────────────────── */
+@media (max-width: 599px) {
+
+  /* Tighter hero vertical rhythm */
+  .page-home .hero-content { padding-top: 1.5rem; }
+  .hero-title  { font-size: clamp(2rem, 10vw, 2.8rem) !important; }
+  .hero-subtitle { font-size: 0.72rem !important; margin-bottom: 0.6rem; }
+  .hero-description { font-size: 0.86rem !important; line-height: 1.62; }
+
+  /* 2 cards on very small screens — hide third */
+  .hms-card:nth-child(3) { display: none; }
+}
+
+/* ── 4. Cookie banner — compact on mobile, never covers CTAs ─── */
+@media (max-width: 640px) {
+  #cookieBanner {
+    padding: 0.4rem 0.8rem !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+  #cookieBanner p {
+    font-size: 0.70rem !important;
+    line-height: 1.35 !important;
+  }
+  #cookieBanner a { text-decoration: underline; }
+  #cookieBanner > div { gap: 0.35rem !important; flex-shrink: 0; }
+  #cookieAccept, #cookieDecline {
+    padding: 0.28rem 0.65rem !important;
+    font-size: 0.68rem !important;
+    white-space: nowrap;
+  }
+}
