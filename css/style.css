@@ -275,7 +275,7 @@ p:last-child { margin-bottom: 0; }
 .mobile-menu {
   display: none;
   position: fixed;
-  top: 70px; left: 0; right: 0;
+  top: var(--nav-h, 76px); left: 0; right: 0;
   background: var(--navy-dark);
   border-bottom: 1px solid var(--border);
   padding: 1.5rem 1.25rem;
@@ -350,7 +350,7 @@ p:last-child { margin-bottom: 0; }
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding-top: 70px;
+  padding-top: var(--nav-h, 76px);
 }
 .hero::before {
   content: '';
@@ -3132,4 +3132,380 @@ label.form-checkbox {
 /* ── 18. Enquiry form card: better desktop padding ──────────────*/
 @media (min-width: 1024px) {
   .form-card { padding: 2.5rem; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   HOMEPAGE HERO & NAV — Premium polish (v2)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Storefront hero image: visible photo + readable text scrim ─ */
+#dd-hero-img {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+#dd-hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 1;
+  display: block;
+}
+#dd-hero-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(10, 27, 51, 0.88) 0%,
+    rgba(10, 27, 51, 0.62) 42%,
+    rgba(10, 27, 51, 0.28) 72%,
+    rgba(10, 27, 51, 0.12) 100%
+  );
+  pointer-events: none;
+}
+
+.page-home .hero {
+  min-height: min(100vh, 920px);
+  padding-top: var(--nav-h, 76px);
+}
+
+/* ── Hero typography hierarchy ─────────────────────────────────── */
+.page-home .hero-badge {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  padding: 0.4rem 0.95rem;
+  margin-bottom: 1.25rem;
+  background: rgba(10, 27, 51, 0.45);
+  border-color: rgba(212, 175, 55, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.page-home .hero-title {
+  font-size: clamp(2.75rem, 8vw, 4.75rem);
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 2px 28px rgba(5, 16, 30, 0.45);
+}
+
+.page-home .hero-subtitle {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-weight: 500;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.88);
+  margin-bottom: 1.25rem;
+}
+
+.page-home .hero-description {
+  font-size: clamp(0.98rem, 1.8vw, 1.12rem);
+  max-width: 580px;
+  line-height: 1.72;
+  margin-bottom: 1.1rem;
+  color: rgba(245, 240, 232, 0.88);
+  text-shadow: 0 1px 12px rgba(5, 16, 30, 0.35);
+}
+
+.hero-tagline {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: rgba(212, 175, 55, 0.82);
+  letter-spacing: 0.03em;
+  margin: 0 0 2rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid rgba(212, 175, 55, 0.42);
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+.page-home .hero-actions {
+  margin-bottom: 2.5rem;
+}
+
+.hero-btn-group {
+  gap: 0.65rem;
+}
+
+/* ── Get Directions — higher contrast ──────────────────────────── */
+.btn-directions {
+  background: rgba(245, 240, 232, 0.1);
+  color: #F5F0E8;
+  border: 1.5px solid rgba(212, 175, 55, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+.btn-directions:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.22);
+}
+
+/* ── Premium navbar lockup ─────────────────────────────────────── */
+:root {
+  --nav-h: 76px;
+}
+
+.navbar-inner {
+  height: var(--nav-h);
+  gap: 1.5rem;
+}
+
+.navbar-logo {
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.logo-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.logo-mark {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.navbar-logo .logo-main {
+  font-size: 1.22rem;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.navbar-logo .logo-sub {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  margin-top: 3px;
+  color: rgba(212, 175, 55, 0.55);
+}
+
+@media (min-width: 1024px) {
+  .logo-mark { width: 50px; height: 50px; }
+  .navbar-logo .logo-main { font-size: 1.32rem; }
+}
+
+/* ── Nav links — luxury spacing & active state ─────────────────── */
+@media (min-width: 900px) {
+  .navbar-links {
+    gap: 0.15rem;
+    margin-left: auto;
+  }
+  .navbar-links a {
+    font-size: 0.84rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 0.48rem 0.95rem;
+    border-radius: 6px;
+    position: relative;
+    color: rgba(245, 240, 232, 0.72);
+  }
+  .navbar-links a:hover {
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.07);
+  }
+  .navbar-links a.active {
+    color: var(--gold);
+    background: rgba(212, 175, 55, 0.1);
+  }
+  .navbar-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+  .navbar-cta { gap: 0.55rem; margin-left: 0.75rem; }
+}
+
+.page-home .navbar {
+  background: rgba(10, 27, 51, 0.92);
+  border-bottom-color: rgba(212, 175, 55, 0.14);
+}
+
+.page-home .navbar.scrolled {
+  background: rgba(10, 27, 51, 0.97);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* ── Compact cookie banner ─────────────────────────────────────── */
+.cookie-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0.6rem 0.85rem;
+  background: rgba(10, 27, 51, 0.94);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.cookie-banner p {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: rgba(245, 240, 232, 0.68);
+  margin: 0;
+  flex: 1;
+  min-width: 180px;
+}
+
+.cookie-banner p a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cookie-banner-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.cookie-btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s ease;
+}
+
+.cookie-btn-decline {
+  background: transparent;
+  border: 1px solid rgba(245, 240, 232, 0.18);
+  color: rgba(245, 240, 232, 0.55);
+}
+
+.cookie-btn-decline:hover {
+  border-color: rgba(245, 240, 232, 0.35);
+  color: rgba(245, 240, 232, 0.8);
+}
+
+.cookie-btn-accept {
+  background: var(--gold);
+  border: none;
+  color: var(--navy-dark);
+}
+
+.cookie-btn-accept:hover {
+  background: #E6C765;
+}
+
+@media (min-width: 768px) {
+  .cookie-banner {
+    left: auto;
+    right: 1.25rem;
+    margin: 0;
+  }
+}
+
+/* Override legacy cookie banner rules */
+#cookieBanner.cookie-banner {
+  padding: 0.6rem 0.85rem !important;
+}
+
+/* ── Mobile hero refinements ───────────────────────────────────── */
+@media (max-width: 599px) {
+  .page-home .hero {
+    min-height: auto;
+    padding-bottom: 2rem;
+  }
+  .page-home .hero-content {
+    padding: 2.5rem 0 2rem;
+  }
+  .page-home .hero-badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    padding: 0.35rem 0.75rem;
+  }
+  .hero-tagline {
+    margin-bottom: 1.75rem;
+    font-size: 0.95rem;
+  }
+  .hero-btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-btn-group .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .page-home .hero-stats {
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .logo-mark { width: 40px; height: 40px; }
+  .navbar-logo .logo-main { font-size: 1.05rem; }
+  .navbar-logo .logo-sub { font-size: 0.52rem; }
+}
+
+@media (max-width: 899px) {
+  .mobile-menu { top: var(--nav-h); }
+}
+
+/* Supersede earlier hero-image opacity rules */
+#dd-hero-img img { opacity: 1 !important; }
+
+/* ════════════════════════════════════════════════════════════════
+   TARGETED LAUNCH FIXES
+   ════════════════════════════════════════════════════════════════ */
+
+/* Fix 3 — Gallery: neutral placeholder bg so pre-load state is not
+   pitch-black on mobile; images display naturally once loaded.
+   The dark navy placeholder was making the gallery look broken
+   before lazy images loaded on slower connections.              */
+.gallery-item {
+  background: #e8e2d9;   /* warm neutral — visible while image loads */
+}
+.gallery-item img {
+  opacity: 1;            /* ensure no opacity applied from any source */
+  display: block;
+}
+
+/* Fix 5 — Contact form: stack Name + Phone on small mobile.
+   Existing rule at 480px works; this explicit rule ensures
+   the contact page form-row also stacks below 480px.          */
+@media (max-width: 480px) {
+  #enquiryForm .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  #tailoringForm .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 }
