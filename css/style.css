@@ -3557,3 +3557,149 @@ label.form-checkbox {
       rgba(212,175,55,0.015) 61px
     );
 }
+
+/* ════════════════════════════════════════════════════════════════
+   HOMEPAGE HERO — Right-side product collage
+   Three overlapping image cards with gold borders + gentle float
+   Desktop only (≥ 960px). Hides cleanly on mobile/tablet.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Two-column hero layout ──────────────────────────────────── */
+.hero-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Left column: existing hero content — constrain so collage has space */
+.hero-grid > .hero-content {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 580px;   /* text column cap; collage fills rest */
+  padding: 0;
+}
+
+/* ── Collage container ───────────────────────────────────────── */
+.hero-collage {
+  flex: 0 0 420px;
+  max-width: 420px;
+  position: relative;
+  height: 500px;
+  pointer-events: none;   /* collage is decorative — links stay in text col */
+}
+
+/* ── Individual card base ───────────────────────────────────── */
+.hc-card {
+  position: absolute;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1.5px solid rgba(212, 175, 55, 0.42);
+  box-shadow:
+    0 10px 36px rgba(0, 0, 0, 0.48),
+    0 2px 8px  rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(212, 175, 55, 0.14);
+}
+.hc-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+/* ── Card 1 — main tall abaya, slight left tilt ─────────────── */
+.hc-card-1 {
+  width: 54%;
+  height: 72%;   /* ~360px of 500 */
+  top: 0;
+  left: 0;
+  transform: rotate(-2deg);
+  z-index: 3;
+  animation: hcFloat1 7s ease-in-out infinite;
+}
+
+/* ── Card 2 — dress, right side, overlapping ────────────────── */
+.hc-card-2 {
+  width: 50%;
+  height: 64%;   /* ~320px of 500 */
+  top: 6%;
+  right: 0;
+  transform: rotate(2deg);
+  z-index: 2;
+  animation: hcFloat2 8.5s ease-in-out infinite 0.8s;
+}
+
+/* ── Card 3 — lace accent, bottom centre ───────────────────── */
+.hc-card-3 {
+  width: 52%;
+  height: 36%;   /* ~180px of 500 */
+  bottom: 0;
+  left: 22%;
+  transform: rotate(-1deg);
+  z-index: 4;
+  animation: hcFloat3 6s ease-in-out infinite 1.6s;
+}
+
+/* ── "New Arrivals" badge on card 1 ─────────────────────────── */
+.hc-label {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  background: linear-gradient(135deg, #D4AF37 0%, #E6C765 100%);
+  color: #05101E;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.24rem 0.62rem;
+  border-radius: 4px;
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+  pointer-events: none;
+}
+
+/* ── Float animations — gentle, not fast ────────────────────── */
+@keyframes hcFloat1 {
+  0%, 100% { transform: rotate(-2deg) translateY(0px);   }
+  50%       { transform: rotate(-2deg) translateY(-10px); }
+}
+@keyframes hcFloat2 {
+  0%, 100% { transform: rotate(2deg) translateY(0px);  }
+  50%       { transform: rotate(2deg) translateY(-8px); }
+}
+@keyframes hcFloat3 {
+  0%, 100% { transform: rotate(-1deg) translateY(0px);  }
+  50%       { transform: rotate(-1deg) translateY(-6px); }
+}
+
+/* ── Subtle gold shimmer on card border ─────────────────────── */
+@keyframes hcBorderGlow {
+  0%, 100% { box-shadow: 0 10px 36px rgba(0,0,0,0.48), 0 0 0 1px rgba(212,175,55,0.14); }
+  50%       { box-shadow: 0 10px 36px rgba(0,0,0,0.48), 0 0 0 1px rgba(212,175,55,0.32); }
+}
+.hc-card-1 { animation: hcFloat1 7s ease-in-out infinite, hcBorderGlow 4s ease-in-out infinite; }
+
+/* ── Reduced motion: remove float if user prefers ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hc-card { animation: none !important; }
+}
+
+/* ── Responsive: hide collage below 960px ───────────────────── */
+/* Mobile hero remains unchanged — full-width text + buttons */
+@media (max-width: 960px) {
+  .hero-grid {
+    display: block;          /* revert to block = original mobile layout */
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .hero-grid > .hero-content {
+    max-width: none;         /* restore full width on mobile */
+  }
+  .hero-collage {
+    display: none;           /* hide collage on tablet/mobile */
+  }
+}
