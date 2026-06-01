@@ -42,6 +42,94 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/png" href="images/optimized/logo-small.png" />
   <link rel="apple-touch-icon" href="images/optimized/logo.png" />
+
+  <!-- Front & Back Finishing section styles -->
+  <style>
+    .finishing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    @media (min-width: 680px) {
+      .finishing-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .finishing-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(212,175,55,0.28);
+      box-shadow: 0 6px 32px rgba(10,27,51,0.10);
+      background: var(--ivory-light);
+      transition: box-shadow 0.25s ease;
+    }
+    .finishing-card:hover {
+      box-shadow: 0 10px 44px rgba(212,175,55,0.18);
+      border-color: rgba(212,175,55,0.50);
+    }
+    .finishing-img-wrap {
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--ivory);
+      position: relative;
+    }
+    .finishing-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .finishing-card:hover .finishing-img-wrap img {
+      transform: scale(1.03);
+    }
+    .finishing-card-body {
+      padding: 1.5rem 1.5rem 1.75rem;
+    }
+    .finishing-card-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold-muted);
+      margin-bottom: 0.5rem;
+    }
+    .finishing-card-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--navy);
+      margin-bottom: 0.7rem;
+    }
+    .finishing-card-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .finishing-card-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-left: 0;
+    }
+    .finishing-card-details li {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.88rem;
+      color: var(--navy);
+    }
+    .finishing-card-details li::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+  </style>
 </head>
 <body class="page-tailoring">
 
@@ -160,8 +248,81 @@
   </div>
 </section>
 
+<!-- Front & Back Finishing -->
+<section class="section-pad" style="background:var(--ivory-light);" aria-labelledby="finishing-heading">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">Our Craftsmanship</span>
+      <h2 class="section-title" id="finishing-heading">Front &amp; Back Finishing</h2>
+      <p class="section-subtitle" style="margin:0 auto;">
+        Every stitch is crafted with care — from the front panel embroidery and custom fitting to the dupatta finishing and back detail work.
+      </p>
+    </div>
+
+    <div class="finishing-grid">
+
+      <!-- Front view card -->
+      <div class="finishing-card">
+        <div class="finishing-img-wrap">
+          <img
+            src="images/misha-tailoring/misha-tailoring-pink-front.jpg"
+            alt="Front view of pink party wear outfit stitched by Misha Tailoring"
+            loading="lazy"
+            decoding="async"
+            width="600"
+            height="800" />
+        </div>
+        <div class="finishing-card-body">
+          <span class="finishing-card-label">Front Finishing</span>
+          <h3 class="finishing-card-title">Custom Stitching &amp; Ladies Tailoring</h3>
+          <p class="finishing-card-desc">
+            Precision necklines, tailored bodice fitting and embroidery detailing — every ladies suit is stitched to your exact measurements for a flattering, elegant silhouette.
+          </p>
+          <ul class="finishing-card-details">
+            <li>Custom stitching to your measurements</li>
+            <li>Embroidery finishing &amp; front panel detailing</li>
+            <li>Ladies suit tailoring — kameez &amp; shalwar</li>
+            <li>Occasion wear &amp; party outfit finishing</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Back view card -->
+      <div class="finishing-card">
+        <div class="finishing-img-wrap">
+          <img
+            src="images/misha-tailoring/misha-tailoring-pink-back.jpg"
+            alt="Back view and dupatta finishing by Misha Tailoring"
+            loading="lazy"
+            decoding="async"
+            width="600"
+            height="800" />
+        </div>
+        <div class="finishing-card-body">
+          <span class="finishing-card-label">Back &amp; Dupatta Finishing</span>
+          <h3 class="finishing-card-title">Dupatta Styling &amp; Kids Tailoring</h3>
+          <p class="finishing-card-desc">
+            Elegant back panel finishing, dupatta draping and kids outfit alterations — every detail considered for a complete, polished look from every angle.
+          </p>
+          <ul class="finishing-card-details">
+            <li>Dupatta styling &amp; draping</li>
+            <li>Back panel tailoring &amp; alterations</li>
+            <li>Kids outfit stitching &amp; alterations</li>
+            <li>Dress alterations &amp; fitting corrections</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center" style="margin-top:2.5rem;">
+      <a href="https://wa.me/447907975847?text=Hi%20Durga%20Designs%2C%20I%20would%20like%20to%20enquire%20about%20Misha%20Tailoring." class="btn btn-gold" target="_blank" rel="noopener">WhatsApp to Book</a>
+    </div>
+  </div>
+</section>
+
 <!-- How It Works -->
-<section class="section-pad" style="background:var(--ivory-light);" aria-labelledby="process-heading">
+<section class="section-pad" aria-labelledby="process-heading">
   <div class="container">
     <div style="max-width:700px;">
       <span class="section-label">Simple Process</span>
