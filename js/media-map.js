@@ -87,11 +87,12 @@ const DD_ASSETS = {
      when ready for a photographic hero.
   ────────────────────────────────────────────────────────────── */
   hero: {
-    // Store front photo — can be used as hero background overlay
+    // Store front photo — kept for Contact, About, Gallery and GBP use.
+    // Set active: true here to restore it on the homepage hero.
     storeFront: {
       src: "images/optimized/store-front.jpg",
       alt: "Durga Designs boutique at Shop 606 Stratford Road Sparkhill Birmingham",
-      active: true
+      active: false
     }
   },
 

@@ -3509,3 +3509,51 @@ label.form-checkbox {
     gap: 0;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   HOMEPAGE HERO — Clean gradient (store-front photo disabled)
+   The #dd-hero-img div is empty when hero.storeFront.active=false.
+   This block makes the gradient-only hero look premium on its own.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Richer layered gradient — deep navy with warm gold depth */
+.hero {
+  background:
+    linear-gradient(155deg, #05101E 0%, #091828 35%, #0c1f38 65%, #0e2442 100%);
+}
+
+/* Gold accent glows for visual warmth — no photo needed */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 80% 40%, rgba(212,175,55,0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 15% 80%, rgba(212,175,55,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 50% at 50% 10%, rgba(212,175,55,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Ensure empty #dd-hero-img is invisible and takes no layout space */
+#dd-hero-img:empty {
+  display: none;
+}
+
+/* Subtle diagonal fabric-weave texture overlay for depth */
+.hero-pattern {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 60px,
+      rgba(212,175,55,0.025) 60px,
+      rgba(212,175,55,0.025) 61px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 60px,
+      rgba(212,175,55,0.015) 60px,
+      rgba(212,175,55,0.015) 61px
+    );
+}
