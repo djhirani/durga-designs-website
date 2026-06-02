@@ -3931,3 +3931,52 @@ label.form-checkbox {
   }
   .hqa-pill { min-height: 54px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE FINAL POLISH
+   1. Misha Tailoring card: outfit-focused crop
+   2. Navbar logo: sharper champagne contrast
+   3. Quick-bar: hidden on homepage mobile (hero pills cover all actions)
+   Desktop layout completely unchanged.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Misha Tailoring mobile card — tighter outfit crop ─────── */
+/* First hms-card is the Misha Tailoring detail image.
+   Shift from top-anchored to centre-focused so the
+   embroidery/outfit fills the card and sky/floor disappears. */
+@media (max-width: 960px) {
+  .hero-mobile-strip .hms-card:first-child img {
+    object-position: center center;   /* was: top center */
+  }
+  /* Slightly stronger gold border elevates the feature card */
+  .hero-mobile-strip .hms-card:first-child {
+    border-color: rgba(212, 175, 55, 0.55);
+    box-shadow:
+      0 6px 22px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(212, 175, 55, 0.20);
+  }
+}
+
+/* ── 2. Navbar logo: sharper on mobile ────────────────────────── */
+/* logo-main was #D4AF37 (flat). Lift to soft champagne gold.
+   logo-sub was rgba(212,175,55,0.55) — too dim. Replace with ivory. */
+@media (max-width: 960px) {
+  .navbar-logo .logo-main {
+    color: #E8C96A;                           /* lifted: brighter champagne gold */
+    text-shadow: 0 1px 8px rgba(212, 175, 55, 0.22); /* subtle depth */
+  }
+  .navbar-logo .logo-sub {
+    color: rgba(239, 227, 195, 0.82);         /* ivory at 82% — readable, elegant */
+    letter-spacing: 0.22em;
+  }
+}
+
+/* ── 3. Quick-bar: suppress on homepage mobile ────────────────── */
+/* The hero quick-action rail (WhatsApp/Call/Visit/Shop) replaces
+   the quick-bar on mobile. Hiding avoids redundant contact clutter
+   immediately after the hero image cards. Other pages unaffected. */
+@media (max-width: 960px) {
+  .page-home .quick-bar {
+    display: none;
+  }
+}
