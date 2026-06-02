@@ -3822,3 +3822,112 @@ label.form-checkbox {
     white-space: nowrap;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   PREMIUM MOBILE QUICK ACTIONS — Hero CTA Rail
+   Replaces oversized green/gold hero buttons on mobile with a
+   compact frosted-glass pill row. Hidden on desktop (> 960px).
+   Old .hero-actions hidden on mobile via .page-home scoping.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Default: hidden — desktop shows .hero-actions as before ─── */
+.hero-quick-actions { display: none; }
+
+/* ── Mobile & tablet (≤ 960px): replace old hero CTAs ──────── */
+@media (max-width: 960px) {
+
+  /* Suppress the old 3-button block — desktop is untouched */
+  .page-home .hero-actions { display: none !important; }
+
+  /* ── Quick-action rail: 4 equal tiles in a row ──────────────── */
+  .hero-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: 100%;
+    margin: 0 0 1.25rem;
+  }
+
+  /* ── Pill tile ───────────────────────────────────────────────── */
+  .hqa-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 60px;
+    padding: 0 4px;
+    border-radius: 12px;
+
+    /* Frosted dark glass — subtle white overlay on dark hero bg */
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    /* Thin champagne-gold border */
+    border: 1px solid rgba(212, 175, 55, 0.30);
+
+    /* Champagne/ivory text */
+    color: rgba(239, 227, 195, 0.90);
+    text-decoration: none;
+    cursor: pointer;
+
+    /* Accessibility & UX */
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: background 0.15s ease, border-color 0.15s ease,
+                color 0.15s ease, transform 0.12s ease;
+  }
+
+  /* Icon */
+  .hqa-pill svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+  }
+
+  /* Label */
+  .hqa-pill span {
+    font-family: var(--font-body);
+    font-size: 0.63rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* WhatsApp: green icon tint only — background stays dark */
+  .hqa-pill--wa svg { color: #25D366; }
+
+  /* Touch active state — instant feedback */
+  .hqa-pill:active {
+    transform: scale(0.95);
+    background: rgba(212, 175, 55, 0.14);
+    border-color: rgba(212, 175, 55, 0.58);
+  }
+
+  /* Keyboard focus ring */
+  .hqa-pill:focus-visible {
+    outline: 2px solid rgba(212, 175, 55, 0.70);
+    outline-offset: 3px;
+  }
+}
+
+/* ── Hover states — pointer devices only (no sticky hover on touch) */
+@media (max-width: 960px) and (hover: hover) {
+  .hqa-pill:hover {
+    background: rgba(212, 175, 55, 0.10);
+    border-color: rgba(212, 175, 55, 0.52);
+    color: #E6C765;
+  }
+  .hqa-pill--wa:hover svg { color: #4ade80; }
+}
+
+/* ── Very narrow screens (≤ 380px): 2×2 grid ────────────────── */
+@media (max-width: 380px) {
+  .hero-quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hqa-pill { min-height: 54px; }
+}
