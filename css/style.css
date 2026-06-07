@@ -3980,3 +3980,312 @@ label.form-checkbox {
     display: none;
   }
 }
+
+/* ================================================================
+   SHOP / CATALOGUE — Stage 1 additions (additive only)
+   New rules for /shop pages and product.html. Does not modify
+   any existing rule above — reuses existing tokens, .btn,
+   .product-card, .section-*, .page-hero, .cta-banner patterns.
+   ================================================================ */
+
+/* ── Shop hero strip (sits inside .page-hero on shop pages) ──── */
+.shop-hero-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+.shop-hero-categories a {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(247, 240, 223, 0.85);
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50px;
+  padding: 0.45rem 1rem;
+  transition: all var(--transition);
+}
+.shop-hero-categories a:hover,
+.shop-hero-categories a.active {
+  background: var(--gold);
+  color: var(--navy-dark);
+  border-color: var(--gold);
+}
+
+/* ── Branded "photography coming soon" placeholder ───────────
+   Premium navy → gold gradient panel used wherever a product or
+   category has no photo yet. Deliberately distinct from the
+   lavender placeholder used on the existing collections grid,
+   so the new artisan lines feel intentional, not unfinished.   */
+.shop-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  text-align: center;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(212,175,55,0.16), transparent 55%),
+    linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+}
+.shop-placeholder-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(212,175,55,0.35));
+}
+.shop-placeholder-label {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ivory);
+  letter-spacing: 0.02em;
+}
+.shop-placeholder-sub {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  opacity: 0.85;
+}
+
+/* ── Shop category cards (shop/index.html) ───────────────────
+   Mirrors .category-card sizing/spacing for visual consistency
+   with the rest of the site, with its own class so the existing
+   collections category grid is never affected.                 */
+.shop-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.1rem;
+  margin-top: 2.5rem;
+}
+.shop-category-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(10,27,51,0.07);
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+.shop-category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(212,175,55,0.3);
+}
+.shop-category-card-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  position: relative;
+  overflow: hidden;
+}
+.shop-category-card-body {
+  padding: 1.4rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.shop-category-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.shop-category-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 1.1rem;
+}
+.shop-category-card-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gold-muted);
+  letter-spacing: 0.02em;
+}
+.shop-category-card:hover .shop-category-card-link { color: var(--gold); }
+
+@media (min-width: 720px) {
+  .shop-category-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+@media (min-width: 1080px) {
+  .shop-category-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── Stock status badges ──────────────────────────────────────
+   Reuses brand colour language: gold for premium, soft greens/
+   ambers/reds at low saturation so they stay elegant, not loud. */
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.65rem;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+.stock-in-stock {
+  background: rgba(46, 158, 95, 0.12);
+  color: #1F8A52;
+  border: 1px solid rgba(46, 158, 95, 0.3);
+}
+.stock-limited {
+  background: rgba(212, 175, 55, 0.14);
+  color: #9A7A1E;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+.stock-preorder {
+  background: rgba(10, 27, 51, 0.07);
+  color: var(--navy);
+  border: 1px solid rgba(10, 27, 51, 0.18);
+}
+.stock-soldout {
+  background: rgba(180, 60, 60, 0.1);
+  color: #B33C3C;
+  border: 1px solid rgba(180, 60, 60, 0.25);
+}
+
+/* ── Shop product cards ───────────────────────────────────────
+   Built on top of .product-card; only adjusts the footer to fit
+   a stock badge alongside the price, and makes the whole card
+   a link (existing .product-card is a div with a separate <a>). */
+a.shop-product-card {
+  display: block;
+}
+a.shop-product-card .product-card-footer {
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* ── Empty-state message (category with no live items yet) ───── */
+.shop-empty-msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 3rem 1.5rem;
+  background: rgba(212,175,55,0.06);
+  border: 1px dashed rgba(212,175,55,0.3);
+  border-radius: var(--radius-lg);
+}
+
+/* ── Product detail page ──────────────────────────────────────── */
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+@media (min-width: 860px) {
+  .product-detail-grid {
+    grid-template-columns: 1.05fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+.product-detail-media-main {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(10,27,51,0.08);
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.product-detail-title {
+  margin: 0.4rem 0 1rem;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+}
+.product-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.product-detail-price {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--navy);
+}
+.product-detail-short {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+.shop-detail-table {
+  border-top: 1px solid var(--border);
+  margin-bottom: 1.75rem;
+}
+.shop-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.shop-detail-label {
+  flex: 0 0 140px;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: 0.02em;
+}
+.shop-detail-value {
+  flex: 1;
+  min-width: 180px;
+  color: var(--text-muted);
+}
+.shop-enquire-btn { margin-bottom: 1.25rem; }
+.shop-handmade-disclaimer {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--text-muted);
+  background: rgba(212,175,55,0.07);
+  border-left: 3px solid var(--gold);
+  padding: 0.85rem 1.1rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  line-height: 1.6;
+}
+
+.product-detail-extra {
+  max-width: 800px;
+  margin: 3.5rem auto 0;
+  display: grid;
+  gap: 2rem;
+}
+.product-detail-extra-block h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+}
+.product-detail-extra-block p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.shop-not-found {
+  max-width: 560px;
+  margin: 2rem auto;
+  text-align: center;
+}
+.shop-not-found h1 { margin-bottom: 0.75rem; }
+.shop-not-found p { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+.shop-detail-cta { margin-top: 4rem; border-radius: var(--radius-lg); overflow: hidden; }
+
+/* ── Mobile tightening (mirrors site's mobile-first spacing) ─── */
+@media (max-width: 640px) {
+  .shop-category-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .product-detail-grid { gap: 1.75rem; }
+  .shop-detail-label { flex-basis: 120px; }
+}
