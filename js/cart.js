@@ -265,10 +265,8 @@ const DDCart = (() => {
             <span>${subtotal.allUnknown ? 'Price on request' : formatPrice(subtotal.amount) + (subtotal.hasPriceOnRequest ? ' + items on request' : '')}</span>
           </div>
 
-          <button type="button" class="btn btn-gold btn-lg btn-full" disabled aria-disabled="true" title="Checkout is coming in the next stage">
-            Checkout — coming next
-          </button>
-          <p class="dd-cart-checkout-note">Online checkout isn't live yet. To place an order now, message us on WhatsApp with your basket items and we'll confirm pricing, availability and delivery.</p>
+          <a href="checkout.html" class="btn btn-gold btn-lg btn-full">Proceed to Checkout</a>
+          <p class="dd-cart-checkout-note">Online card payment isn't live yet — checkout will collect your delivery details, then we'll confirm pricing, availability and final payment with you directly (or you can message us on WhatsApp any time).</p>
           <a href="${WA_BASE_FOR_CART()}" class="btn btn-whatsapp btn-lg btn-full" target="_blank" rel="noopener">${BAG_SVG} Enquire About My Basket on WhatsApp</a>
 
           <button type="button" class="dd-cart-clear" data-clear-cart>Clear basket</button>
