@@ -4714,3 +4714,94 @@ a.shop-product-card .product-card-footer {
   .dd-checkout-summary-col { order: 1; }
   .dd-checkout-form-col { order: 2; }
 }
+
+/* ================================================================
+   ORDER STATUS PAGES (success / cancelled) — Stage 4 additions
+   ================================================================ */
+
+.dd-order-status {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--ivory);
+  border: 1px solid rgba(10, 27, 51, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 1.75rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.dd-order-status-icon {
+  display: inline-block;
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.dd-order-status h1 {
+  color: var(--navy);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  margin: 0.25rem 0 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.dd-order-status-lede {
+  font-size: 1.02rem;
+  color: var(--navy);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.dd-order-status p {
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.dd-order-status-note {
+  font-size: 0.88rem;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: var(--radius-md, 10px);
+  padding: 0.75rem 1rem;
+  color: var(--navy) !important;
+  font-weight: 500;
+  margin: 1rem 0 1.5rem;
+}
+
+.dd-order-status .btn-group {
+  margin-top: 0.5rem;
+}
+
+/* ================================================================
+   STRIPE TEST CHECKOUT — Stage 4 additions to checkout page
+   ================================================================ */
+
+.dd-checkout-stripe-btn {
+  margin-bottom: 0.6rem;
+}
+
+.dd-checkout-stripe-blocked-note {
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: var(--radius-md, 10px);
+  padding: 0.75rem 1rem;
+  color: var(--navy);
+  font-weight: 500;
+  font-size: 0.88rem;
+  margin: 0 0 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.dd-checkout-stripe-error {
+  font-size: 0.85rem;
+  color: #b3261e;
+  font-weight: 600;
+  margin: 0.4rem 0 0.75rem;
+  min-height: 1.1em;
+  overflow-wrap: anywhere;
+}
+
+.dd-checkout-stripe-loading {
+  opacity: 0.7;
+  cursor: progress;
+}

@@ -168,6 +168,27 @@ const DDCheckout = (() => {
         return fieldMarkup(def, value);
       }).join('');
 
+      // Stripe-hosted Checkout (TEST MODE) is only offered when every basket
+      // item carries a confirmed numeric price. We never invent a price, so
+      // any "Price on request" item blocks Stripe checkout outright and the
+      // customer is pointed to WhatsApp instead — this mirrors the
+      // authoritative server-side check in the Netlify function.
+      const stripeEligible = (typeof DDPayment !== 'undefined')
+        ? DDPayment.canUseStripeCheckout(items)
+        : { eligible: false, reason: 'Online payment is not available right now.' };
+
+      const stripeBlock = stripeEligible.eligible ? `
+        <button type="button" class="btn btn-gold btn-lg btn-full dd-checkout-stripe-btn" data-stripe-checkout>
+          🔒 Pay Securely with Stripe (Test Mode)
+        </button>
+        <p class="dd-checkout-stripe-error" data-stripe-error aria-live="polite"></p>
+      ` : `
+        <p class="dd-checkout-stripe-blocked-note">${stripeEligible.reason}</p>
+        <button type="button" class="btn btn-gold btn-lg btn-full dd-checkout-stripe-btn" disabled aria-disabled="true" title="Online payment is not available for this basket">
+          🔒 Pay Securely with Stripe — unavailable
+        </button>
+      `;
+
       el.innerHTML = `
         <div class="dd-checkout-layout">
 
@@ -196,11 +217,13 @@ const DDCheckout = (() => {
 
               <p class="dd-checkout-form-status" data-form-status aria-live="polite"></p>
 
-              <button type="submit" class="btn btn-gold btn-lg btn-full" disabled aria-disabled="true" title="Secure payment is coming in the next stage">
-                Continue to secure payment — coming next
+              ${stripeBlock}
+
+              <button type="submit" class="btn btn-outline-gold btn-lg btn-full" data-save-details>
+                Save My Details
               </button>
               <p class="dd-checkout-trust-text">
-                🔒 Secure card payment will be processed by Stripe in the next stage. Durga Designs will never store your card details.
+                🔒 Secure card payment is processed by Stripe. Durga Designs never stores your card details.
               </p>
 
               <a href="#" data-wa-checkout class="btn btn-whatsapp btn-lg btn-full" target="_blank" rel="noopener">
@@ -353,10 +376,60 @@ const DDCheckout = (() => {
 
         if (statusEl) {
           statusEl.classList.remove('dd-checkout-status-error');
-          statusEl.textContent = 'Your details are saved. Online payment is coming in the next stage — for now, please confirm your order with us on WhatsApp using the button below.';
+          statusEl.textContent = 'Your details are saved. You can now pay securely with Stripe (test mode) if your basket is eligible, or confirm your order with us on WhatsApp.';
         }
         syncWaLink();
       });
+
+      // ── Stripe-hosted Checkout (TEST MODE) ───────────────────────
+      // Clicking this button NEVER collects card details on this page.
+      // It validates the form, saves details locally, then asks our own
+      // serverless function to create a Stripe Checkout Session and
+      // redirects the browser to Stripe's hosted payment page.
+      const stripeBtn = el.querySelector('[data-stripe-checkout]');
+      const stripeErrorEl = el.querySelector('[data-stripe-error]');
+
+      if (stripeBtn) {
+        stripeBtn.addEventListener('click', async () => {
+          if (stripeErrorEl) stripeErrorEl.textContent = '';
+
+          const values = readFormValues(form);
+          saveDetails(values);
+          const result = validate(form, values);
+
+          if (!result.valid) {
+            if (statusEl) {
+              statusEl.textContent = 'Please check the highlighted fields above before continuing to secure payment.';
+              statusEl.classList.add('dd-checkout-status-error');
+            }
+            if (result.firstInvalid) {
+              const target = form.querySelector(`[name="${result.firstInvalid}"]`);
+              if (target) target.focus();
+            }
+            return;
+          }
+
+          if (typeof DDPayment === 'undefined') {
+            if (stripeErrorEl) stripeErrorEl.textContent = 'Online payment is not available right now. Please use the WhatsApp option below.';
+            return;
+          }
+
+          const originalLabel = stripeBtn.textContent;
+          stripeBtn.disabled = true;
+          stripeBtn.classList.add('dd-checkout-stripe-loading');
+          stripeBtn.textContent = 'Redirecting to secure payment…';
+
+          const outcome = await DDPayment.startStripeCheckout(items, values);
+
+          if (!outcome.ok) {
+            stripeBtn.disabled = false;
+            stripeBtn.classList.remove('dd-checkout-stripe-loading');
+            stripeBtn.textContent = originalLabel;
+            if (stripeErrorEl) stripeErrorEl.textContent = outcome.error || 'We could not start secure payment just now. Please try again, or message us on WhatsApp.';
+          }
+          // On success, DDPayment redirects the browser to Stripe — nothing else to do here.
+        });
+      }
 
       // Pre-fill the WhatsApp link from any saved details immediately.
       syncWaLink();
