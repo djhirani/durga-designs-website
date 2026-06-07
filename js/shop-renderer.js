@@ -185,9 +185,23 @@ const ShopRender = (() => {
             ${detailRow('Dimensions / Size', p.dimensions || 'Details available on request')}
           </div>
 
-          <a href="${waUrl}" class="btn btn-whatsapp btn-lg btn-full shop-enquire-btn" target="_blank" rel="noopener" aria-label="Enquire about ${p.title} on WhatsApp">
-            ${WA_SVG} Enquire on WhatsApp
-          </a>
+          <div class="btn-group shop-detail-actions">
+            <button type="button" class="btn btn-gold btn-lg shop-add-to-basket-btn" data-add-to-basket
+              data-slug="${p.slug}"
+              data-title="${p.title.replace(/"/g, '&quot;')}"
+              data-category="${p.category}"
+              data-category-label="${cat ? cat.shortTitle.replace(/"/g, '&quot;') : ''}"
+              data-price="${typeof p.price === 'number' ? p.price : ''}"
+              data-image="${p.image || ''}"
+              data-icon="${cat ? cat.icon : '✨'}"
+              aria-label="Add ${p.title} to basket">
+              🛍️ Add to Basket
+            </button>
+            <a href="${waUrl}" class="btn btn-whatsapp btn-lg shop-enquire-btn" target="_blank" rel="noopener" aria-label="Enquire about ${p.title} on WhatsApp">
+              ${WA_SVG} Enquire on WhatsApp
+            </a>
+          </div>
+          <p class="shop-basket-msg" data-basket-msg aria-live="polite"></p>
 
           <p class="shop-handmade-disclaimer">${SHOP_HANDMADE_DISCLAIMER}</p>
         </div>
@@ -219,6 +233,31 @@ const ShopRender = (() => {
     document.title = `${p.title.replace(/&amp;/g, '&')} | Durga Designs Shop`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', p.shortDescription);
+
+    /* Wire up "Add to Basket" — Stage 2: localStorage only, no payment. */
+    const addBtn = el.querySelector('[data-add-to-basket]');
+    const msgEl  = el.querySelector('[data-basket-msg]');
+    if (addBtn && typeof DDCart !== 'undefined') {
+      addBtn.addEventListener('click', () => {
+        const ds = addBtn.dataset;
+        DDCart.addItem({
+          slug:             ds.slug,
+          title:            ds.title,
+          category:         ds.category,
+          categoryLabel:    ds.categoryLabel,
+          price:            ds.price !== '' ? parseFloat(ds.price) : null,
+          image:            ds.image || null,
+          placeholderIcon:  ds.icon,
+          placeholderLabel: ds.categoryLabel,
+          qty: 1
+        });
+        if (msgEl) {
+          msgEl.textContent = `${p.title.replace(/&amp;/g, '&')} added to your basket.`;
+          msgEl.classList.add('shop-basket-msg-active');
+          setTimeout(() => msgEl.classList.remove('shop-basket-msg-active'), 2600);
+        }
+      });
+    }
   }
 
   return { categoryGrid, productGrid, productDetail };
