@@ -33,6 +33,7 @@
 
 const { requireAdmin } = require('./lib/admin-auth');
 const { ALLOWED_STATUSES, updateOrder } = require('./lib/admin-order-data');
+const { sendDispatchEmail } = require('./lib/email-service');
 
 function jsonResponse(statusCode, bodyObj) {
   return {
@@ -113,10 +114,54 @@ exports.handler = async function (event) {
       });
     }
 
+    // Stage 8: trigger the customer dispatch/tracking email when this
+    // update either (a) just moved the order INTO "Dispatched", or
+    // (b) the order was already "Dispatched" and the admin meaningfully
+    // changed the tracking number (added one, or corrected an existing
+    // one) — exactly the two cases the Stage 8 spec calls for.
+    //
+    // Email failures must NEVER turn a successful order update into an
+    // error response — the update already succeeded and is the source
+    // of truth; a notification hiccup is logged, not surfaced as a 5xx.
+    let dispatchEmail = null;
+    const newStatus = result.order && result.order.orderStatus;
+    const newTracking = (typeof result.order.trackingNumber === 'string') ? result.order.trackingNumber.trim() : '';
+    const justDispatched = Boolean(result.statusChanged) && newStatus === 'Dispatched';
+    const trackingMeaningfullyChanged = Boolean(
+      newStatus === 'Dispatched' &&
+      typeof updates.trackingNumber === 'string' &&
+      newTracking &&
+      newTracking !== (result.previousTrackingNumber || '')
+    );
+
+    if (justDispatched || trackingMeaningfullyChanged) {
+      try {
+        const sendResult = await sendDispatchEmail(result.order, { trackingMeaningfullyChanged });
+        dispatchEmail = {
+          attempted: true,
+          sent: Boolean(sendResult.sent),
+          skipped: Boolean(sendResult.skipped),
+          reason: sendResult.reason || null
+        };
+        if (!sendResult.ok) {
+          // eslint-disable-next-line no-console
+          console.error('[admin-order-update] Dispatch email failed:', sendResult.error);
+        } else if (sendResult.skipped) {
+          // eslint-disable-next-line no-console
+          console.log('[admin-order-update] Dispatch email skipped:', sendResult.reason);
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('[admin-order-update] Unexpected error sending dispatch email:', e && e.message);
+        dispatchEmail = { attempted: true, sent: false, error: 'unexpected-error' };
+      }
+    }
+
     return jsonResponse(200, {
       source: result.source,
       statusChanged: Boolean(result.statusChanged),
-      order: result.order
+      order: result.order,
+      dispatchEmail
     });
   } catch (e) {
     // eslint-disable-next-line no-console

@@ -43,6 +43,7 @@
 
 const { saveOrder, hasOrder } = require('./lib/order-store');
 const { buildOrderNumber, minorUnitsToAmount, sanitiseCustomerDetails } = require('./lib/order-utils');
+const { sendCustomerConfirmation, sendAdminNewOrder } = require('./lib/email-service');
 
 function jsonResponse(statusCode, bodyObj) {
   return {
@@ -220,6 +221,72 @@ exports.handler = async function (event) {
     // cause Stripe to endlessly retry. This will be revisited with a
     // proper datastore (Supabase) in Stage 6.
     return jsonResponse(200, { received: true, stored: false, sessionId: session.id });
+  }
+
+  // 7. Send the customer confirmation + admin notification emails —
+  //    but ONLY the very first time this order is genuinely created.
+  //    `result.created === true` is the structural duplicate-prevention
+  //    guard: a Stripe retry would have been caught by hasOrder() above
+  //    (returns early) or by `alreadyExisted` here (race condition).
+  //    email-service.js layers a second, persisted check
+  //    (confirmation_email_sent_at / admin_email_sent_at) on top of
+  //    this for defence in depth — see lib/email-service.js.
+  //
+  //    Email failures must NEVER break order creation or this response:
+  //    Stripe has already been told payment succeeded, and the order is
+  //    already safely stored — a missing/broken email service is a
+  //    notification problem, not an order problem (Stage 9+ concern).
+  if (result.created) {
+    // Build the normalised "order" shape email-service/templates expect —
+    // reuses the same field names the admin dashboard already normalises
+    // to, so templates work identically regardless of which backend
+    // ultimately stored the order.
+    const emailOrder = {
+      id: order.stripeSessionId,
+      stripeSessionId: order.stripeSessionId,
+      orderNumber: order.orderNumber,
+      customerName: order.customer && order.customer.fullName,
+      customerEmail: order.customer && order.customer.email,
+      customerPhone: order.customer && order.customer.phone,
+      address: {
+        line1: order.customer && order.customer.address1,
+        line2: order.customer && order.customer.address2,
+        city: order.customer && order.customer.city,
+        postcode: order.customer && order.customer.postcode,
+        country: order.customer && order.customer.country
+      },
+      items: order.basketItems,
+      totalAmount: order.totalAmount,
+      currency: order.currency
+    };
+
+    try {
+      const confirmationResult = await sendCustomerConfirmation(emailOrder);
+      if (!confirmationResult.ok) {
+        // eslint-disable-next-line no-console
+        console.error('[stripe-webhook] Customer confirmation email failed:', confirmationResult.error);
+      } else if (confirmationResult.skipped) {
+        // eslint-disable-next-line no-console
+        console.log('[stripe-webhook] Customer confirmation email skipped:', confirmationResult.reason);
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('[stripe-webhook] Unexpected error sending customer confirmation email:', e && e.message);
+    }
+
+    try {
+      const adminResult = await sendAdminNewOrder(emailOrder);
+      if (!adminResult.ok) {
+        // eslint-disable-next-line no-console
+        console.error('[stripe-webhook] Admin new-order email failed:', adminResult.error);
+      } else if (adminResult.skipped) {
+        // eslint-disable-next-line no-console
+        console.log('[stripe-webhook] Admin new-order email skipped:', adminResult.reason);
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('[stripe-webhook] Unexpected error sending admin new-order email:', e && e.message);
+    }
   }
 
   return jsonResponse(200, {

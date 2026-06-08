@@ -213,8 +213,80 @@ async function listOrders() {
   }
 }
 
+/* ================================================================
+   Email duplicate-prevention helpers (Stage 8)
+   ================================================================
+   These read/write the *_email_sent_at columns added in migration 001
+   (confirmation_email_sent_at, admin_email_sent_at, dispatch_email_sent_at).
+   They are deliberately tiny and generic — keyed by stripe_session_id
+   (present on every order, in both backends) and a column name drawn
+   from a fixed allow-list, so callers in email-service.js can use the
+   exact same calling convention regardless of which store is active.
+   ================================================================ */
+
+const EMAIL_TIMESTAMP_COLUMNS = ['confirmation_email_sent_at', 'admin_email_sent_at', 'dispatch_email_sent_at'];
+
+// Returns { confirmationEmailSentAt, adminEmailSentAt, dispatchEmailSentAt } | null
+async function getOrderEmailStatus(stripeSessionId) {
+  if (!stripeSessionId) return null;
+
+  const clientCheck = getSupabaseClient();
+  if (!clientCheck.ok) return null;
+
+  try {
+    const { data, error } = await clientCheck.client
+      .from('orders')
+      .select('confirmation_email_sent_at, admin_email_sent_at, dispatch_email_sent_at')
+      .eq('stripe_session_id', stripeSessionId)
+      .maybeSingle();
+
+    if (error || !data) return null;
+    return {
+      confirmationEmailSentAt: data.confirmation_email_sent_at || null,
+      adminEmailSentAt: data.admin_email_sent_at || null,
+      dispatchEmailSentAt: data.dispatch_email_sent_at || null
+    };
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('[supabase-order-store] getOrderEmailStatus() unexpected error:', e.message);
+    return null;
+  }
+}
+
+// Records that an email of the given type was sent JUST NOW. Callers
+// must only invoke this AFTER a successful send — never before, and
+// never speculatively. Returns { ok, error? }.
+async function markOrderEmailSent(stripeSessionId, column) {
+  if (!stripeSessionId || !EMAIL_TIMESTAMP_COLUMNS.includes(column)) {
+    return { ok: false, error: 'Invalid arguments to markOrderEmailSent().' };
+  }
+
+  const clientCheck = getSupabaseClient();
+  if (!clientCheck.ok) {
+    return { ok: false, error: `Supabase not available (${clientCheck.reason}).` };
+  }
+
+  try {
+    const patch = {};
+    patch[column] = new Date().toISOString();
+
+    const { error } = await clientCheck.client
+      .from('orders')
+      .update(patch)
+      .eq('stripe_session_id', stripeSessionId);
+
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  }
+}
+
 module.exports = {
   hasOrder,
   saveOrder,
-  listOrders
+  listOrders,
+  getOrderEmailStatus,
+  markOrderEmailSent,
+  EMAIL_TIMESTAMP_COLUMNS
 };

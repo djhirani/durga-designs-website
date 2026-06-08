@@ -1,9 +1,9 @@
-# Durga Designs — Order Flow Notes (Stages 5–7: Webhook, Storage & Admin)
+# Durga Designs — Order Flow Notes (Stages 5–8: Webhook, Storage, Admin & Email)
 
 > **Status: TEST MODE ONLY. NOT DEPLOYED.** Nothing here is connected to
-> live Stripe keys, a real/connected Supabase project, or an email service.
-> This document describes how the pieces fit together right now, and what
-> changes in Stage 8.
+> live Stripe keys, a real/connected Supabase project, or a real email
+> provider account. This document describes how the pieces fit together
+> right now.
 >
 > **Stage 6 update:** Supabase Postgres storage code has now been added
 > (see `supabase/migrations/001_create_orders.sql`,
@@ -21,6 +21,16 @@
 > (Stage 7)" below. It is gated by a temporary shared `ADMIN_ACCESS_TOKEN`
 > and reads/writes orders only through Durga Designs' own server-side
 > functions; it never talks to Supabase directly from the browser.
+>
+> **Stage 8 update:** Transactional order emails now exist — customer
+> order confirmation, admin new-order notification, and customer
+> dispatch/tracking (`netlify/functions/lib/email-client.js`,
+> `email-templates.js`, `email-service.js`,
+> `netlify/functions/send-dispatch-email.js`) — see "Order email
+> notifications (Stage 8)" below and `docs/email-setup.md` for full
+> details. They are sent server-side only, via Resend, with strict
+> duplicate prevention backed by the `*_email_sent_at` columns added in
+> the Stage 6 migration.
 
 ## How a test order is created today
 
@@ -171,19 +181,81 @@ other field is silently dropped, and a status change is recorded as a
 history entry (Supabase: `order_status_history` row; dev fallback: an
 in-file `statusHistory` array).
 
-**What the dashboard deliberately does not do:** send any emails
-(Stage 8), expose any order data publicly, or let the browser reach
-Supabase or the database directly.
+**What the dashboard deliberately does not do:** expose any order data
+publicly, or let the browser reach Supabase or the database directly.
+(As of Stage 8, it *does* trigger one email — see below.)
+
+## Order email notifications (Stage 8)
+
+Three transactional emails are now sent, server-side only, through a
+small provider-agnostic layer — full detail lives in
+`docs/email-setup.md`, summarised here:
+
+- **Customer order confirmation** — sent to the customer's email the
+  first time a paid order is created (triggered from
+  `stripe-webhook.js`, immediately after `saveOrder()` reports
+  `result.created === true`). Confirms the order number, items,
+  total paid, and delivery address; explicitly says Durga Designs will
+  now prepare the order — it does **not** claim dispatch yet.
+- **Admin new-order notification** — sent to `ADMIN_ORDER_EMAIL` at the
+  same trigger point, with full order/customer/contact/delivery details
+  and a link to the (locally-running, not-yet-deployed) admin dashboard.
+- **Customer dispatch / tracking** — sent to the customer's email when
+  an admin update (`admin-order-update.js`) moves the order's status to
+  **Dispatched**, or meaningfully changes the tracking number on an
+  already-dispatched order. States courier and tracking number (if
+  available) and a short support message — no delivery-date promises.
+
+**The pieces:**
+`netlify/functions/lib/email-client.js` is a small `https`-based wrapper
+around the [Resend](https://resend.com) HTTP send-email API (no new npm
+dependency — see `docs/email-setup.md` §3 for why). It reads
+`RESEND_API_KEY` / `FROM_EMAIL` from the server-side environment only,
+and fails safely (`{ skipped: true, reason }`) if either is missing or
+looks like a placeholder. `netlify/functions/lib/email-templates.js`
+builds the subject/HTML/text for each email — every piece of
+user-supplied content (names, addresses, notes, item titles, courier/
+tracking strings) is passed through `escapeHtml()` before reaching HTML
+output, and no template ever references card, CVC, PAN, or bank-account
+details (the order shapes they receive never contain such data — Stripe
+Checkout handles and stores it, never Durga Designs).
+`netlify/functions/lib/email-service.js` is the only module other code
+calls — it owns the decision of *whether* to send, builds via templates,
+sends via the client, and (only on a genuinely successful send) records
+the matching `*_email_sent_at` timestamp via `order-store`'s new
+`getOrderEmailStatus()` / `markOrderEmailSent()` helpers (which route to
+Supabase or the dev fallback, exactly like every other order-store call).
+
+**Duplicate prevention (see `docs/email-setup.md` §5 for full detail):**
+the webhook only ever calls the confirmation/admin senders on a
+genuinely first-time `saveOrder()` (retries are already caught by
+`hasOrder()`/`alreadyExisted` upstream — emails never even get
+considered for a replay), and `email-service.js` re-checks the
+persisted `*_email_sent_at` column regardless, as a second layer of
+defence. Dispatch emails additionally compare the before/after state
+(`previousStatus`, `previousTrackingNumber` — now returned by
+`lib/admin-order-data.js`'s `updateOrder()`) so a routine re-save that
+doesn't change status or tracking never re-sends. A small standalone,
+admin-gated endpoint (`netlify/functions/send-dispatch-email.js`) lets a
+human explicitly (re)send the dispatch email for an already-dispatched
+order — e.g. if the automatic send failed.
+
+**What this deliberately doesn't do:** send any non-transactional email
+(marketing, newsletters, password resets, …), retry/queue failed sends,
+or let any email-sending failure block order creation or an admin
+update — every send is wrapped so a notification problem can never
+become an order problem.
 
 ## What is intentionally NOT in this stage
 
 - No **connected/live** Supabase project — the schema and client code
   exist and have been reviewed locally, but nothing has been deployed
   or pointed at a real project with real keys
-- No outbound emails (confirmation, receipts, etc.) (Stage 8) — the
-  `*_email_sent_at` columns exist in the schema but are always `null`,
-  and the admin dashboard's update flow never triggers anything email-related
+- No **connected/live** Resend account, domain, or API key — only
+  documented placeholders exist in `.env.example` (see
+  `docs/email-setup.md`)
 - No live Stripe keys anywhere
 - No real authentication system for the admin dashboard — `ADMIN_ACCESS_TOKEN`
   is a deliberate, documented stop-gap (see "Admin order dashboard" above)
 - No legal-page changes
+- No marketing/non-transactional email of any kind

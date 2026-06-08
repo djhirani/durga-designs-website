@@ -52,6 +52,9 @@ the real `.env`):
 | `SUPABASE_ANON_KEY` | *(placeholder only — not currently used)* | Kept for completeness; this project's frontend does **not** call Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | `netlify/functions/lib/supabase-client.js` | **Server-side only.** Bypasses RLS — treat like a DB root password |
 | `ADMIN_ACCESS_TOKEN` | `netlify/functions/lib/admin-auth.js` | **Server-side only.** Temporary shared-token gate for the admin dashboard (Stage 7) — generate a long random string, never commit a real value |
+| `RESEND_API_KEY` | `netlify/functions/lib/email-client.js` | **Server-side only.** Transactional-email provider key (Stage 8) — see `docs/email-setup.md`, never commit a real value |
+| `FROM_EMAIL` | `netlify/functions/lib/email-client.js` | Verified sender identity, e.g. `Durga Designs <orders@yourdomain.example>` (Stage 8) |
+| `ADMIN_ORDER_EMAIL` | `netlify/functions/lib/email-service.js` | Inbox that receives "new paid order" notifications (Stage 8) |
 
 If `SUPABASE_URL` or `SUPABASE_SERVICE_ROLE_KEY` are missing or don't
 look valid, `netlify/functions/lib/order-store.js` automatically falls
@@ -115,13 +118,23 @@ How it stays safe:
   specifically so this stage would have somewhere to read from and
   write to — are now actively used by the dashboard's update form.
 
-## 6. Emails come in Stage 8
+## 6. Email notifications (Stage 8)
 
 The `confirmation_email_sent_at`, `admin_email_sent_at`, and
-`dispatch_email_sent_at` columns exist in the schema now, but **no
-email service is configured or called anywhere in this project**. They
-remain `null` until Stage 8 introduces an actual email-sending
-integration that updates them once a real email has been sent.
+`dispatch_email_sent_at` columns are now actively used. A small,
+provider-agnostic email layer (`netlify/functions/lib/email-client.js`,
+`email-templates.js`, `email-service.js` — see `docs/email-setup.md`
+for the full picture) sends three transactional emails — customer order
+confirmation, admin new-order notification, and customer dispatch/
+tracking — and stamps the matching column with the current timestamp
+**only after a genuinely successful send**, which is what prevents
+duplicate sends on webhook replays or repeated admin saves.
+
+If `RESEND_API_KEY` / `FROM_EMAIL` / `ADMIN_ORDER_EMAIL` are not
+configured, the email layer no-ops safely with a clear developer-facing
+log message — exactly like the Supabase/dev-store fallback pattern.
+**No order/admin/dispatch flow can ever fail or be blocked because
+email sending isn't configured.**
 
 ## 7. Deployment status
 

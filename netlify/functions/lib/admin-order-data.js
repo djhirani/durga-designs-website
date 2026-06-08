@@ -149,6 +149,11 @@ async function supabaseUpdateOrder(client, id, updates) {
   // `existing` after issuing the update below. Defensive against any
   // client implementation that might return/mutate shared references.
   const previousStatus = existing.status;
+  // Also captured up-front (Stage 8) — lets callers (admin-order-update.js)
+  // detect a "meaningful tracking change" for dispatch-email purposes
+  // without re-reading a possibly-mutated reference. Same defensive
+  // reasoning as previousStatus above.
+  const previousTrackingNumber = existing.tracking_number || '';
 
   const patch = { updated_at: nowISO() };
   let statusChanged = false;
@@ -186,7 +191,14 @@ async function supabaseUpdateOrder(client, id, updates) {
 
   const refreshed = await supabaseGetOrder(client, id);
   if (!refreshed.ok) return refreshed;
-  return { ok: true, source: 'supabase', order: refreshed.order, statusChanged };
+  return {
+    ok: true,
+    source: 'supabase',
+    order: refreshed.order,
+    statusChanged,
+    previousStatus,
+    previousTrackingNumber
+  };
 }
 
 /* ================================================================
@@ -307,6 +319,7 @@ function devUpdateOrder(id, updates) {
   if (!raw) return { ok: false, notFound: true };
 
   const previousStatus = raw.status || raw.orderStatus;
+  const previousTrackingNumber = raw.trackingNumber || '';
   let statusChanged = false;
 
   if (typeof updates.status === 'string' && updates.status !== previousStatus) {
@@ -337,7 +350,14 @@ function devUpdateOrder(id, updates) {
     return { ok: false, error: e.message };
   }
 
-  return { ok: true, source: 'dev-fallback', order: mapDevOrderDetail(raw), statusChanged };
+  return {
+    ok: true,
+    source: 'dev-fallback',
+    order: mapDevOrderDetail(raw),
+    statusChanged,
+    previousStatus,
+    previousTrackingNumber
+  };
 }
 
 /* ================================================================

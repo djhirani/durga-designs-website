@@ -88,6 +88,39 @@ async function listOrders() {
   return devListOrders();
 }
 
+// Email duplicate-prevention helpers (Stage 8) — see email-service.js.
+// Same routing rule as everything else in this file: Supabase when
+// configured, otherwise the dev/test file-store fallback below.
+//
+// Returns { confirmationEmailSentAt, adminEmailSentAt, dispatchEmailSentAt } | null
+async function getOrderEmailStatus(stripeSessionId) {
+  logRoutingDecisionOnce();
+  if (isSupabaseConfigured()) {
+    return supabaseOrderStore.getOrderEmailStatus(stripeSessionId);
+  }
+  return devGetOrderEmailStatus(stripeSessionId);
+}
+
+// `field` must be one of the EMAIL_FIELD_MAP keys below — both backends
+// validate against the same fixed list so a typo can never silently no-op.
+async function markOrderEmailSent(stripeSessionId, field) {
+  logRoutingDecisionOnce();
+  if (isSupabaseConfigured()) {
+    const column = EMAIL_FIELD_MAP[field];
+    if (!column) return { ok: false, error: `Unknown email field "${field}".` };
+    return supabaseOrderStore.markOrderEmailSent(stripeSessionId, column);
+  }
+  return devMarkOrderEmailSent(stripeSessionId, field);
+}
+
+// Maps the normalised field names email-service.js uses onto the actual
+// Supabase column names (see migration 001) / dev JSON property names.
+const EMAIL_FIELD_MAP = {
+  confirmationEmailSentAt: 'confirmation_email_sent_at',
+  adminEmailSentAt: 'admin_email_sent_at',
+  dispatchEmailSentAt: 'dispatch_email_sent_at'
+};
+
 /* ================================================================
    ⚠️  DEV/TEST-ONLY ORDER STORE — NOT FOR PRODUCTION USE  ⚠️
    ================================================================
@@ -202,9 +235,58 @@ function devListOrders() {
   }
 }
 
+// DEV/TEST-ONLY email-status helpers (Stage 8). Reads/writes the same
+// per-session JSON file devSaveOrder() created, adding three optional
+// properties (confirmationEmailSentAt / adminEmailSentAt /
+// dispatchEmailSentAt — camelCase, to match the dev order shape's
+// existing convention) the first time any of them is set.
+//
+// LIMITATION (documented — see docs/email-setup.md): this is a simple
+// read-modify-write over a flat file with no locking. It is adequate
+// for solo local testing (the only thing this fallback is for) but
+// would not be safe under concurrent writers — exactly like the rest
+// of the dev file store, and for the same reasons it must never be
+// relied on in any environment that handles real orders.
+function devGetOrderEmailStatus(stripeSessionId) {
+  if (!stripeSessionId) return null;
+  const filePath = path.join(DEV_ORDERS_DIR, fileNameForSession(stripeSessionId));
+  if (!fs.existsSync(filePath)) return null;
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return {
+      confirmationEmailSentAt: raw.confirmationEmailSentAt || null,
+      adminEmailSentAt: raw.adminEmailSentAt || null,
+      dispatchEmailSentAt: raw.dispatchEmailSentAt || null
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
+function devMarkOrderEmailSent(stripeSessionId, field) {
+  if (!stripeSessionId || !Object.prototype.hasOwnProperty.call(EMAIL_FIELD_MAP, field)) {
+    return { ok: false, error: `Unknown email field "${field}".` };
+  }
+  const filePath = path.join(DEV_ORDERS_DIR, fileNameForSession(stripeSessionId));
+  if (!fs.existsSync(filePath)) return { ok: false, error: 'Dev order file not found.' };
+
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    raw[field] = new Date().toISOString();
+    fs.writeFileSync(filePath, JSON.stringify(raw, null, 2));
+    return { ok: true };
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('[order-store:DEV-ONLY] Failed to record email-sent timestamp:', e.message);
+    return { ok: false, error: e.message };
+  }
+}
+
 module.exports = {
   DEV_ORDERS_DIR,
   hasOrder,
   saveOrder,
-  listOrders
+  listOrders,
+  getOrderEmailStatus,
+  markOrderEmailSent
 };
