@@ -15,3 +15,15 @@ images/Durga-Designs-assets/Reels/Five Pee Sale.mp4
 .idea/
 *.swp
 *.swo
+
+# Environment variables — never commit real secrets (see .env.example for the template)
+.env
+.env.local
+.env.*.local
+
+# DEV/TEST-ONLY Stripe webhook order store (Stage 5).
+# This is throwaway local order data used to prove the webhook → order flow
+# before Supabase replaces it in Stage 6. Real or test order data must NEVER
+# be committed — only the placeholder .gitkeep below is tracked.
+data/dev-orders/*
+!data/dev-orders/.gitkeep

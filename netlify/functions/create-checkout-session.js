@@ -92,6 +92,44 @@ function getSiteUrl() {
   return (process.env.SITE_URL || 'http://localhost:8888').replace(/\/+$/, '');
 }
 
+// Stripe metadata values must be strings, max 500 chars, max 50 keys.
+// We keep this DELIBERATELY minimal — just enough for the webhook to build
+// a useful dev/test order record — and never include payment-instrument data
+// (which Checkout never gives us in the first place).
+function truncate(value, max) {
+  const str = (typeof value === 'string') ? value : '';
+  return str.length > max ? str.slice(0, max) : str;
+}
+
+function buildSafeMetadata(customer, lineItemSummaries) {
+  const safeCustomer = (customer && typeof customer === 'object') ? customer : {};
+  const metadata = {
+    customerFullName: truncate(safeCustomer.fullName, 200),
+    customerEmail:    truncate(safeCustomer.email, 200),
+    customerPhone:    truncate(safeCustomer.phone, 60),
+    customerAddress1: truncate(safeCustomer.address1, 200),
+    customerAddress2: truncate(safeCustomer.address2, 200),
+    customerCity:     truncate(safeCustomer.city, 120),
+    customerPostcode: truncate(safeCustomer.postcode, 20),
+    customerCountry:  truncate(safeCustomer.country, 80),
+    customerNotes:    truncate(safeCustomer.notes, 400)
+  };
+
+  // Keep the basket summary compact — slug, title, qty, unit price (GBP) —
+  // and hard-cap the JSON string at Stripe's 500-char metadata value limit.
+  let basketItemsJson = JSON.stringify(lineItemSummaries);
+  if (basketItemsJson.length > 480) {
+    // Fall back to a slimmer shape (drop titles) if the full version is too long.
+    basketItemsJson = JSON.stringify(lineItemSummaries.map(i => ({ slug: i.slug, qty: i.qty, unitAmount: i.unitAmount })));
+  }
+  if (basketItemsJson.length > 480) {
+    basketItemsJson = JSON.stringify({ truncated: true, count: lineItemSummaries.length });
+  }
+  metadata.basketItemsJson = basketItemsJson;
+
+  return metadata;
+}
+
 /* ── main handler ────────────────────────────────────────────── */
 
 exports.handler = async function (event) {
@@ -135,6 +173,7 @@ exports.handler = async function (event) {
   //    Frontend slugs/quantities are accepted; frontend PRICES are ignored
   //    entirely — every amount is recalculated here.
   const lineItems = [];
+  const lineItemSummaries = []; // compact, safe summary for session metadata (server-confirmed values only)
   for (const rawItem of items) {
     const slug = rawItem && typeof rawItem.slug === 'string' ? rawItem.slug.trim() : '';
     const qty = Math.max(1, Math.min(99, parseInt(rawItem && rawItem.qty, 10) || 1));
@@ -168,6 +207,11 @@ exports.handler = async function (event) {
         }
       }
     });
+
+    // Server-confirmed summary only — title/price come from SAFE_PRODUCT_MAP,
+    // never from the frontend. This is what gets embedded in session metadata
+    // for the webhook to use when building the dev/test order record.
+    lineItemSummaries.push({ slug, title: safeProduct.title, qty, unitAmount: safeProduct.price });
   }
 
   // 4. Create the Stripe Checkout Session (test mode key only).
@@ -190,6 +234,14 @@ exports.handler = async function (event) {
   const customer = (payload.customer && typeof payload.customer === 'object') ? payload.customer : {};
   const customerEmail = (typeof customer.email === 'string' && customer.email.trim()) ? customer.email.trim() : undefined;
 
+  // Minimal, sanitised snapshot of the checkout form + basket — passed as
+  // Stripe session metadata so the webhook (Stage 5) can build a useful
+  // dev/test order record once Stripe confirms payment. This is NOT card
+  // data (Checkout never gives us that) and is NOT itself an order record —
+  // no order is created or stored here; that only happens after a verified
+  // `checkout.session.completed` webhook event.
+  const metadata = buildSafeMetadata(customer, lineItemSummaries);
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -197,10 +249,13 @@ exports.handler = async function (event) {
       currency: CURRENCY,
       line_items: lineItems,
       customer_email: customerEmail,
+      metadata,
       success_url: `${siteUrl}/order-success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/order-cancelled.html`,
       // NOTE: No order is created and no customer data is persisted here.
-      // That arrives in a later stage, alongside webhook verification.
+      // Order creation happens only in the webhook handler, only after
+      // Stripe confirms `checkout.session.completed` with payment_status
+      // "paid", and only into the clearly-labelled DEV/TEST order store.
     });
 
     return jsonResponse(200, { url: session.url });
