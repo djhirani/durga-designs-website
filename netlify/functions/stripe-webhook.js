@@ -1,13 +1,23 @@
 /* ================================================================
-   DURGA DESIGNS — STRIPE WEBHOOK HANDLER (Stage 5)
+   DURGA DESIGNS — STRIPE WEBHOOK HANDLER (Stage 5 + Stage 6)
    ================================================================
    Netlify serverless function (NOT deployed yet — local/test only).
 
    Purpose: securely receive Stripe webhook events, verify their
    signature, and — ONLY for a confirmed `checkout.session.completed`
-   event — record a DEV/TEST-ONLY order in the local file-based store
-   (netlify/functions/lib/order-store.js). Real persistence arrives
-   with Supabase in Stage 6; admin tooling and emails come even later.
+   event — persist a paid order via netlify/functions/lib/order-store.js.
+
+   As of Stage 6, order-store.js is a ROUTER:
+     - If Supabase is configured (SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY),
+       orders are written to Postgres via supabase-order-store.js — the
+       intended PRODUCTION path (see supabase/migrations/001_create_orders.sql).
+     - Otherwise it falls back to the original DEV/TEST-ONLY local file
+       store from Stage 5, purely so this can still be exercised locally
+       without a Supabase project. That fallback is clearly labelled and
+       must never be relied on for real customer orders.
+   This handler does not need to know or care which one is active —
+   that seam was deliberately left in order-store.js's calling convention.
+   Admin tooling and emails come in later stages (7 and 8).
 
    Hard rules enforced here:
      - The raw request body is verified against STRIPE_WEBHOOK_SECRET
@@ -136,7 +146,7 @@ exports.handler = async function (event) {
   // 4. Idempotency check — Stripe may retry delivery of the same event.
   //    The Checkout Session ID is our idempotency key; if we already have
   //    an order for it, we acknowledge success without doing anything else.
-  if (hasOrder(session.id)) {
+  if (await hasOrder(session.id)) {
     return jsonResponse(200, { received: true, duplicate: true, sessionId: session.id });
   }
 
@@ -200,7 +210,7 @@ exports.handler = async function (event) {
     createdAt: createdAtISO
   };
 
-  const result = saveOrder(order);
+  const result = await saveOrder(order);
 
   if (result.error) {
     // eslint-disable-next-line no-console
