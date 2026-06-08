@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Detail (Admin Test Mode) | Durga Designs</title>
+  <meta name="description" content="Durga Designs internal order detail — test system, not deployed." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/png" href="../images/optimized/logo-small.png" />
+</head>
+<body class="page-admin">
+
+<header class="dd-admin-bar">
+  <div class="container dd-admin-bar-inner">
+    <a href="index.html" class="dd-admin-brand">
+      <span class="logo-main">Durga Designs</span>
+      <span class="logo-sub">Admin · Order Detail</span>
+    </a>
+    <span class="dd-admin-test-badge">⚠️ Admin test system — not deployed yet</span>
+  </div>
+</header>
+
+<main class="section-pad" style="padding-top:3rem;">
+  <div class="container">
+
+    <div id="dd-admin-gate" class="dd-admin-panel dd-admin-panel-narrow">
+      <h1>Admin sign-in required</h1>
+      <p class="dd-admin-panel-lede">Enter your admin access token to view this order.</p>
+      <form id="dd-admin-gate-form" class="dd-admin-form" autocomplete="off" novalidate>
+        <div class="dd-admin-field">
+          <label for="dd-admin-gate-token-input">Admin access token</label>
+          <input type="password" id="dd-admin-gate-token-input" name="adminToken" placeholder="Paste your admin access token" autocomplete="off" />
+        </div>
+        <button type="submit" class="btn btn-gold btn-lg btn-full">Unlock Order</button>
+        <p id="dd-admin-gate-status" class="dd-admin-form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <div id="dd-admin-order-view" class="dd-admin-order-view" hidden>
+      <p><a href="orders/index.html" class="dd-admin-back-link">&larr; Back to all orders</a></p>
+
+      <p id="dd-admin-order-status-msg" class="dd-admin-form-status" role="status" aria-live="polite"></p>
+
+      <div id="dd-admin-order-content" hidden>
+        <div class="dd-admin-order-grid">
+
+          <section class="dd-admin-card">
+            <h2>Order Summary</h2>
+            <dl class="dd-admin-dl">
+              <div><dt>Order number</dt><dd id="dd-order-number"></dd></div>
+              <div><dt>Stripe session ID</dt><dd id="dd-order-session-id" class="dd-mono"></dd></div>
+              <div><dt>Payment status</dt><dd id="dd-order-payment-status"></dd></div>
+              <div><dt>Order placed</dt><dd id="dd-order-created-at"></dd></div>
+              <div><dt>Last updated</dt><dd id="dd-order-updated-at"></dd></div>
+              <div><dt>Total paid</dt><dd id="dd-order-total"></dd></div>
+            </dl>
+          </section>
+
+          <section class="dd-admin-card">
+            <h2>Customer</h2>
+            <dl class="dd-admin-dl">
+              <div><dt>Name</dt><dd id="dd-order-customer-name"></dd></div>
+              <div><dt>Email</dt><dd id="dd-order-customer-email"></dd></div>
+              <div><dt>Phone / WhatsApp</dt><dd id="dd-order-customer-phone"></dd></div>
+              <div><dt>Delivery address</dt><dd id="dd-order-address"></dd></div>
+            </dl>
+          </section>
+
+          <section class="dd-admin-card dd-admin-card-wide">
+            <h2>Items</h2>
+            <div class="dd-admin-table-wrap">
+              <table class="dd-admin-table" id="dd-order-items-table">
+                <thead>
+                  <tr><th>Product</th><th>Qty</th><th>Unit price</th><th>Line total</th></tr>
+                </thead>
+                <tbody id="dd-order-items-tbody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="dd-admin-card dd-admin-card-wide">
+            <h2>Fulfilment</h2>
+            <p class="dd-admin-panel-lede">
+              Update the order status, courier, tracking number, and internal notes below.
+              Changes are saved directly to the active order store (Supabase if connected,
+              otherwise the local dev/test order store — see the source indicator on the
+              orders list). No emails are sent (Stage 8).
+            </p>
+
+            <form id="dd-admin-update-form" class="dd-admin-form" autocomplete="off" novalidate>
+              <input type="hidden" id="dd-admin-order-id" value="" />
+
+              <div class="dd-admin-field">
+                <label for="dd-admin-status-select">Order status</label>
+                <select id="dd-admin-status-select" name="status">
+                  <option value="Paid">Paid</option>
+                  <option value="Packing">Packing</option>
+                  <option value="Dispatched">Dispatched</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Refunded">Refunded</option>
+                </select>
+              </div>
+
+              <div class="dd-admin-field">
+                <label for="dd-admin-status-note">Note about this status change (optional)</label>
+                <input type="text" id="dd-admin-status-note" name="statusNote" maxlength="500" placeholder="e.g. Packed and ready for collection by courier" />
+              </div>
+
+              <div class="dd-admin-field">
+                <label for="dd-admin-courier">Courier</label>
+                <input type="text" id="dd-admin-courier" name="courier" maxlength="120" placeholder="e.g. Royal Mail, DPD, hand delivery" />
+              </div>
+
+              <div class="dd-admin-field">
+                <label for="dd-admin-tracking">Tracking number</label>
+                <input type="text" id="dd-admin-tracking" name="trackingNumber" maxlength="120" placeholder="e.g. AB123456789GB" />
+              </div>
+
+              <div class="dd-admin-field">
+                <label for="dd-admin-notes">Admin notes (internal only — never shown to customers)</label>
+                <textarea id="dd-admin-notes" name="adminNotes" maxlength="2000" rows="4" placeholder="Internal notes for staff reference"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-gold btn-lg btn-full">Save Changes</button>
+              <p id="dd-admin-update-status" class="dd-admin-form-status" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="dd-admin-card dd-admin-card-wide">
+            <h2>Status history</h2>
+            <ul class="dd-admin-history-list" id="dd-order-history-list">
+              <li class="dd-admin-history-empty">No status changes recorded yet.</li>
+            </ul>
+          </section>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="dd-admin-footer">
+  <div class="container">
+    <p>Durga Designs — internal admin test tool. Not part of the public site. No order data is ever shown without a valid token.</p>
+  </div>
+</footer>
+
+<script src="../js/admin-orders.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.DDAdmin && typeof window.DDAdmin.initOrderDetailPage === 'function') {
+      window.DDAdmin.initOrderDetailPage();
+    }
+  });
+</script>
+</body>
+</html>

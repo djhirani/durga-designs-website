@@ -51,6 +51,7 @@ the real `.env`):
 | `SUPABASE_URL` | `netlify/functions/lib/supabase-client.js` | Project URL, e.g. `https://xxxx.supabase.co` |
 | `SUPABASE_ANON_KEY` | *(placeholder only — not currently used)* | Kept for completeness; this project's frontend does **not** call Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | `netlify/functions/lib/supabase-client.js` | **Server-side only.** Bypasses RLS — treat like a DB root password |
+| `ADMIN_ACCESS_TOKEN` | `netlify/functions/lib/admin-auth.js` | **Server-side only.** Temporary shared-token gate for the admin dashboard (Stage 7) — generate a long random string, never commit a real value |
 
 If `SUPABASE_URL` or `SUPABASE_SERVICE_ROLE_KEY` are missing or don't
 look valid, `netlify/functions/lib/order-store.js` automatically falls
@@ -86,15 +87,33 @@ never crashes because Supabase isn't configured.**
   check (those exist too, as a fast-path, but the constraint is the
   real guarantee).
 
-## 5. Admin dashboard comes in Stage 7
+## 5. Admin dashboard (Stage 7)
 
-This stage adds **schema and storage code only**. There is no admin UI,
-no authenticated admin access path, and no way for a human to browse,
-search, or update orders through this project yet. The `status`,
-`courier`, `tracking_number`, and `admin_notes` columns (and the
-`order_status_history` table) exist now so that Stage 7's admin
-dashboard has somewhere to read from and write to — they are not
-populated or used by anything in this stage.
+A protected admin dashboard now exists at `admin/index.html` →
+`admin/orders/index.html` → `admin/order.html?id=...`. It uses a
+**temporary shared-token gate** (`ADMIN_ACCESS_TOKEN`, see
+`.env.example`) rather than real user accounts — that's intentionally
+a stop-gap, documented as such everywhere it appears.
+
+How it stays safe:
+- The admin frontend **never** talks to Supabase directly. It only
+  calls Durga Designs' own Netlify Functions
+  (`netlify/functions/admin-orders.js` and
+  `netlify/functions/admin-order-update.js`), which verify the token
+  via `netlify/functions/lib/admin-auth.js` on every single request
+  before touching any data.
+- Those functions read/write through
+  `netlify/functions/lib/admin-order-data.js`, which itself routes to
+  Supabase (when configured) or the dev/test file-store fallback —
+  exactly the same pattern as the Stage 6 webhook order-store router.
+- `ADMIN_ACCESS_TOKEN` is a server-side-only environment variable.
+  The browser never stores it persistently (sessionStorage only —
+  cleared when the tab closes) and it is sent only as a request
+  header to Durga Designs' own functions.
+- The `status`, `courier`, `tracking_number`, `admin_notes`, and
+  `order_status_history` pieces of the schema — added in Stage 6
+  specifically so this stage would have somewhere to read from and
+  write to — are now actively used by the dashboard's update form.
 
 ## 6. Emails come in Stage 8
 

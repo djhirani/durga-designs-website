@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login (Test Mode) | Durga Designs</title>
+  <meta name="description" content="Durga Designs internal admin access — test system, not deployed." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/png" href="../images/optimized/logo-small.png" />
+</head>
+<body class="page-admin">
+
+<header class="dd-admin-bar">
+  <div class="container dd-admin-bar-inner">
+    <a href="../index.html" class="dd-admin-brand">
+      <span class="logo-main">Durga Designs</span>
+      <span class="logo-sub">Admin</span>
+    </a>
+    <span class="dd-admin-test-badge">⚠️ Admin test system — not deployed yet</span>
+  </div>
+</header>
+
+<main class="section-pad" style="padding-top:3rem;">
+  <div class="container">
+    <div class="dd-admin-panel dd-admin-panel-narrow">
+      <h1>Admin Access (Test Mode)</h1>
+      <p class="dd-admin-panel-lede">
+        This is a temporary, local/test admin entry point for Durga Designs staff only.
+        It is <strong>not connected to the live site</strong> and uses a single shared
+        access token while a proper login system is built.
+      </p>
+
+      <form id="dd-admin-login-form" class="dd-admin-form" autocomplete="off" novalidate>
+        <div class="dd-admin-field">
+          <label for="dd-admin-token-input">Admin access token</label>
+          <input type="password" id="dd-admin-token-input" name="adminToken" placeholder="Paste your admin access token" autocomplete="off" />
+        </div>
+        <button type="submit" class="btn btn-gold btn-lg btn-full">Continue to Orders</button>
+        <p id="dd-admin-login-status" class="dd-admin-form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="dd-admin-note">
+        <p>
+          🔒 Your token is kept only in this browser's session storage — it is
+          never written to any file in this project, never logged, and is sent
+          only to Durga Designs' own server-side functions over this connection.
+        </p>
+        <p>
+          Don't have a token? Tokens are issued locally by whoever is running
+          this project for testing — see <code>.env.example</code> /
+          <code>docs/supabase-setup.md</code> for how <code>ADMIN_ACCESS_TOKEN</code>
+          is configured.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="dd-admin-footer">
+  <div class="container">
+    <p>Durga Designs — internal admin test tool. Not part of the public site. No order data is ever shown without a valid token.</p>
+  </div>
+</footer>
+
+<script src="../js/admin-orders.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.DDAdmin && typeof window.DDAdmin.initLoginPage === 'function') {
+      window.DDAdmin.initLoginPage();
+    }
+  });
+</script>
+</body>
+</html>

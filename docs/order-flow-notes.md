@@ -1,9 +1,9 @@
-# Durga Designs — Order Flow Notes (Stages 5 & 6: Webhook + Order Storage)
+# Durga Designs — Order Flow Notes (Stages 5–7: Webhook, Storage & Admin)
 
 > **Status: TEST MODE ONLY. NOT DEPLOYED.** Nothing here is connected to
-> live Stripe keys, a real/connected Supabase project, an admin dashboard,
-> or email. This document describes how the pieces fit together right now,
-> and what changes in Stages 7 and 8.
+> live Stripe keys, a real/connected Supabase project, or an email service.
+> This document describes how the pieces fit together right now, and what
+> changes in Stage 8.
 >
 > **Stage 6 update:** Supabase Postgres storage code has now been added
 > (see `supabase/migrations/001_create_orders.sql`,
@@ -11,6 +11,16 @@
 > `netlify/functions/lib/supabase-order-store.js`) and is the *intended
 > production* order store. The Stage 5 dev file store still exists as a
 > local-only fallback — see "How order storage is routed" below.
+>
+> **Stage 7 update:** A protected admin order dashboard now exists
+> (`admin/index.html`, `admin/orders/index.html`, `admin/order.html`,
+> `js/admin-orders.js`, `netlify/functions/admin-orders.js`,
+> `netlify/functions/admin-order-update.js`,
+> `netlify/functions/lib/admin-auth.js`,
+> `netlify/functions/lib/admin-order-data.js`) — see "Admin order dashboard
+> (Stage 7)" below. It is gated by a temporary shared `ADMIN_ACCESS_TOKEN`
+> and reads/writes orders only through Durga Designs' own server-side
+> functions; it never talks to Supabase directly from the browser.
 
 ## How a test order is created today
 
@@ -120,14 +130,60 @@ of these two implementations actually runs — see "How order storage is
 routed" above. `stripe-webhook.js` itself required no structural changes
 beyond `await`-ing the now-asynchronous `hasOrder`/`saveOrder` calls.
 
+## Admin order dashboard (Stage 7)
+
+Durga Designs staff can now view and update paid orders through a
+small, protected admin tool:
+
+- **`admin/index.html`** — landing page where the admin pastes their
+  `ADMIN_ACCESS_TOKEN` (a temporary shared-secret gate — see below).
+- **`admin/orders/index.html`** — order list (number, date, customer
+  name/email, total, payment status, order status), newest first.
+- **`admin/order.html?id=...`** — full order detail (Stripe session ID,
+  customer + delivery details, items/quantities/prices, totals, payment
+  status) plus an update form for **status, courier, tracking number,
+  and admin notes**, and a status-change history log.
+
+**How access is gated (temporary, by design):**
+`ADMIN_ACCESS_TOKEN` is a single shared secret, set as a server-side
+environment variable only (see `.env.example`). The admin pastes it
+into the browser; it's kept only in `sessionStorage` for that tab
+(cleared when the tab closes — never written to a file, never logged)
+and sent as an `X-Admin-Token` request header. Every admin Netlify
+Function verifies it via `netlify/functions/lib/admin-auth.js` —
+constant-time comparison, missing token → 401, wrong token → 403,
+not configured → 503 — **before** touching any order data. This is
+explicitly a stop-gap; a real authentication system can replace it
+later without changing how the rest of the admin code calls
+`requireAdmin(event)`.
+
+**How reads/writes stay safe:**
+The admin frontend (`js/admin-orders.js`) **never** talks to Supabase —
+it only calls `netlify/functions/admin-orders.js` (list + detail) and
+`netlify/functions/admin-order-update.js` (updates), which route through
+`netlify/functions/lib/admin-order-data.js`. That module picks Supabase
+or the dev/test file-store fallback exactly like the Stage 6 webhook
+router, and returns a normalised shape either way. Updates go through a
+strict allow-list (`status`, `courier`, `trackingNumber`, `adminNotes`,
+`statusNote`) — `status` is validated against a fixed list (`Paid`,
+`Packing`, `Dispatched`, `Delivered`, `Cancelled`, `Refunded`), every
+other field is silently dropped, and a status change is recorded as a
+history entry (Supabase: `order_status_history` row; dev fallback: an
+in-file `statusHistory` array).
+
+**What the dashboard deliberately does not do:** send any emails
+(Stage 8), expose any order data publicly, or let the browser reach
+Supabase or the database directly.
+
 ## What is intentionally NOT in this stage
 
 - No **connected/live** Supabase project — the schema and client code
   exist and have been reviewed locally, but nothing has been deployed
   or pointed at a real project with real keys
-- No admin dashboard or order management UI (Stage 7)
 - No outbound emails (confirmation, receipts, etc.) (Stage 8) — the
-  `*_email_sent_at` columns exist in the schema but are always `null`
+  `*_email_sent_at` columns exist in the schema but are always `null`,
+  and the admin dashboard's update flow never triggers anything email-related
 - No live Stripe keys anywhere
-- No order fulfilment workflow — `status: 'paid'` is just a starting
-  label; `order_status_history` exists for Stage 7 to use, not this stage
+- No real authentication system for the admin dashboard — `ADMIN_ACCESS_TOKEN`
+  is a deliberate, documented stop-gap (see "Admin order dashboard" above)
+- No legal-page changes

@@ -4805,3 +4805,324 @@ a.shop-product-card .product-card-footer {
   opacity: 0.7;
   cursor: progress;
 }
+
+/* ================================================================
+   ADMIN ORDER DASHBOARD (Stage 7) — admin/** pages only
+   ================================================================
+   Internal/staff tool styling. Deliberately simple, professional,
+   navy/gold/white, mobile-first. Not part of the public marketing
+   site's nav/hero system — these pages use their own minimal bar.
+   ================================================================ */
+
+body.page-admin {
+  background: var(--ivory-light, #FBF7ED);
+}
+
+.dd-admin-bar {
+  background: var(--navy-dark);
+  border-bottom: 2px solid var(--gold);
+  padding: 0.85rem 0;
+}
+
+.dd-admin-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.dd-admin-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  text-decoration: none;
+}
+.dd-admin-brand .logo-main { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.15rem; }
+.dd-admin-brand .logo-sub  { color: var(--ivory-light, #FBF7ED); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.85; }
+
+.dd-admin-test-badge {
+  display: inline-block;
+  background: rgba(212, 175, 55, 0.16);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  color: var(--gold-light, var(--gold));
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--radius, 8px);
+  white-space: normal;
+  max-width: 100%;
+}
+
+.dd-admin-footer {
+  background: var(--navy-dark);
+  color: var(--text-muted-dark, rgba(165,150,122,0.65));
+  padding: 1.25rem 0;
+  margin-top: 3rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+.dd-admin-footer p { margin: 0; overflow-wrap: anywhere; }
+
+/* ── Panels / login & gate forms ─────────────────────────────────── */
+
+.dd-admin-panel {
+  background: var(--ivory);
+  border: 1px solid rgba(10, 27, 51, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.dd-admin-panel-narrow {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.dd-admin-panel h1 {
+  color: var(--navy);
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  margin: 0 0 0.6rem;
+}
+
+.dd-admin-panel-lede {
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.dd-admin-form { display: flex; flex-direction: column; gap: 0.9rem; }
+
+.dd-admin-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.dd-admin-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+.dd-admin-field input,
+.dd-admin-field select,
+.dd-admin-field textarea {
+  font: inherit;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgba(10, 27, 51, 0.18);
+  border-radius: var(--radius, 8px);
+  background: #fff;
+  color: var(--navy);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+.dd-admin-field input:focus,
+.dd-admin-field select:focus,
+.dd-admin-field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18);
+}
+.dd-admin-field textarea { resize: vertical; min-height: 5rem; }
+
+.dd-admin-form-status {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+  min-height: 1.2em;
+  overflow-wrap: anywhere;
+}
+.dd-admin-status-error { color: #b3261e; font-weight: 600; }
+
+.dd-admin-note {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(10, 27, 51, 0.1);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.dd-admin-note p { margin: 0 0 0.6rem; overflow-wrap: anywhere; }
+.dd-admin-note code {
+  background: rgba(10, 27, 51, 0.06);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.82em;
+}
+
+/* ── Orders list page ────────────────────────────────────────────── */
+
+.dd-admin-orders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.dd-admin-orders-header h1 { color: var(--navy); margin: 0; font-size: clamp(1.3rem, 4vw, 1.8rem); }
+
+.dd-admin-orders-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dd-admin-source-pill {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--navy);
+  background: rgba(10, 27, 51, 0.06);
+  border-radius: var(--radius, 8px);
+  padding: 0.35rem 0.65rem;
+  white-space: normal;
+}
+
+.dd-admin-empty-note {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--ivory);
+  border: 1px dashed rgba(10, 27, 51, 0.18);
+  border-radius: var(--radius-lg);
+}
+
+/* ── Tables (orders list + order items) ──────────────────────────── */
+
+.dd-admin-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid rgba(10, 27, 51, 0.1);
+  border-radius: var(--radius-lg);
+  background: #fff;
+}
+
+.dd-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 640px; /* allows horizontal scroll within the wrapper on small screens, never the page */
+}
+.dd-admin-table th,
+.dd-admin-table td {
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid rgba(10, 27, 51, 0.08);
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
+.dd-admin-table thead th {
+  background: var(--navy-dark);
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.dd-admin-table tbody tr:last-child td { border-bottom: none; }
+.dd-admin-table tbody tr:hover { background: rgba(212, 175, 55, 0.06); }
+.dd-admin-table a { color: var(--navy); font-weight: 600; text-decoration: underline; }
+.dd-admin-table a:hover { color: var(--gold-muted); }
+
+.dd-admin-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.dd-admin-badge-payment {
+  background: rgba(10, 27, 51, 0.08);
+  color: var(--navy);
+}
+.dd-admin-badge-status { background: rgba(212, 175, 55, 0.16); color: var(--navy); }
+.dd-status-paid       { background: rgba(212, 175, 55, 0.22); }
+.dd-status-packing    { background: rgba(16, 37, 68, 0.12); }
+.dd-status-dispatched { background: rgba(33, 110, 84, 0.16); }
+.dd-status-delivered  { background: rgba(33, 110, 84, 0.28); }
+.dd-status-cancelled  { background: rgba(179, 38, 30, 0.14); }
+.dd-status-refunded   { background: rgba(179, 38, 30, 0.22); }
+
+/* ── Order detail page ───────────────────────────────────────────── */
+
+.dd-admin-back-link {
+  color: var(--navy);
+  font-weight: 600;
+  text-decoration: none;
+}
+.dd-admin-back-link:hover { color: var(--gold-muted); text-decoration: underline; }
+
+.dd-admin-order-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.dd-admin-card {
+  background: var(--ivory);
+  border: 1px solid rgba(10, 27, 51, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.dd-admin-card h2 {
+  color: var(--navy);
+  font-size: 1.1rem;
+  margin: 0 0 1rem;
+}
+.dd-admin-card-wide { grid-column: 1 / -1; }
+
+.dd-admin-dl {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+}
+.dd-admin-dl > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.dd-admin-dl dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+.dd-admin-dl dd {
+  margin: 0;
+  color: var(--navy);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.dd-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; }
+
+.dd-admin-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.dd-admin-history-list li {
+  background: #fff;
+  border: 1px solid rgba(10, 27, 51, 0.08);
+  border-radius: var(--radius, 8px);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
+.dd-admin-history-date { color: var(--text-muted); font-size: 0.82em; margin-left: 0.4rem; }
+.dd-admin-history-empty { color: var(--text-muted); font-style: italic; background: transparent; border-style: dashed; }
+
+/* ── Admin mobile layout ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .dd-admin-bar-inner { flex-direction: column; align-items: flex-start; }
+  .dd-admin-orders-header { flex-direction: column; align-items: flex-start; }
+  .dd-admin-orders-header-actions { width: 100%; }
+  .dd-admin-orders-header-actions .btn { flex: 1; }
+}

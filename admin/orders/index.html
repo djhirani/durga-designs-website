@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders (Admin Test Mode) | Durga Designs</title>
+  <meta name="description" content="Durga Designs internal order list — test system, not deployed." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="icon" type="image/png" href="../../images/optimized/logo-small.png" />
+</head>
+<body class="page-admin">
+
+<header class="dd-admin-bar">
+  <div class="container dd-admin-bar-inner">
+    <a href="../index.html" class="dd-admin-brand">
+      <span class="logo-main">Durga Designs</span>
+      <span class="logo-sub">Admin · Orders</span>
+    </a>
+    <span class="dd-admin-test-badge">⚠️ Admin test system — not deployed yet</span>
+  </div>
+</header>
+
+<main class="section-pad" style="padding-top:3rem;">
+  <div class="container">
+
+    <div id="dd-admin-gate" class="dd-admin-panel dd-admin-panel-narrow">
+      <h1>Admin sign-in required</h1>
+      <p class="dd-admin-panel-lede">Enter your admin access token to view orders.</p>
+      <form id="dd-admin-gate-form" class="dd-admin-form" autocomplete="off" novalidate>
+        <div class="dd-admin-field">
+          <label for="dd-admin-gate-token-input">Admin access token</label>
+          <input type="password" id="dd-admin-gate-token-input" name="adminToken" placeholder="Paste your admin access token" autocomplete="off" />
+        </div>
+        <button type="submit" class="btn btn-gold btn-lg btn-full">Unlock Orders</button>
+        <p id="dd-admin-gate-status" class="dd-admin-form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <div id="dd-admin-orders-view" class="dd-admin-orders-view" hidden>
+      <div class="dd-admin-orders-header">
+        <h1>Paid Orders</h1>
+        <div class="dd-admin-orders-header-actions">
+          <span id="dd-admin-orders-source" class="dd-admin-source-pill"></span>
+          <button type="button" id="dd-admin-refresh-btn" class="btn btn-outline-gold btn-sm">Refresh</button>
+          <button type="button" id="dd-admin-logout-btn" class="btn btn-outline-gold btn-sm">Sign out</button>
+        </div>
+      </div>
+
+      <p id="dd-admin-orders-status" class="dd-admin-form-status" role="status" aria-live="polite"></p>
+
+      <div class="dd-admin-table-wrap">
+        <table class="dd-admin-table" id="dd-admin-orders-table">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="dd-admin-orders-tbody">
+            <!-- Rows injected by js/admin-orders.js — never rendered server-side, never public -->
+          </tbody>
+        </table>
+      </div>
+
+      <p id="dd-admin-orders-empty" class="dd-admin-empty-note" hidden>
+        No paid orders found yet. New paid orders appear here automatically once the Stripe webhook records them.
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="dd-admin-footer">
+  <div class="container">
+    <p>Durga Designs — internal admin test tool. Not part of the public site. No order data is ever shown without a valid token.</p>
+  </div>
+</footer>
+
+<script src="../../js/admin-orders.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.DDAdmin && typeof window.DDAdmin.initOrdersListPage === 'function') {
+      window.DDAdmin.initOrdersListPage();
+    }
+  });
+</script>
+</body>
+</html>
