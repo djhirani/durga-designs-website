@@ -176,6 +176,8 @@ const DD_ASSETS = {
       id:          "cat-unstitched",
       title:       "Unstitched Suits",
       slug:        "unstitched",
+      // OWNER: replace with a cleaner shot (neatly-styled fabric, not the cluttered
+      // plastic-wrapped storeroom shelf). Suggested filename: unstitched-suits-clean.jpg
       cover:       "images/optimized/unstitched-suits.jpg",
       coverAlt:    "Unstitched suit fabric collection at Durga Designs Sparkhill Birmingham",
       description: "Beautiful unstitched fabric sets for custom tailoring through Misha Tailoring.",
@@ -188,6 +190,8 @@ const DD_ASSETS = {
       id:          "cat-laces-buttons",
       title:       "Laces &amp; Buttons",
       slug:        "laces-buttons",
+      // OWNER: replace with a cleaner, neatly-styled shot (not the cluttered
+      // storeroom/shelf photo). Suggested filename: laces-buttons-clean.jpg
       cover:       "images/optimized/lace-variety.jpg",
       coverAlt:    "Laces and buttons collection at Durga Designs Sparkhill Birmingham",
       description: "Wide range of decorative laces, buttons, trims and accessories.",
