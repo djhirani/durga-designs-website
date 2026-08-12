@@ -388,6 +388,8 @@ const DDRender = (() => {
       case 'privacy':
       case 'returns':
       case 'terms':
+      case 'tharparkar':
+      case 'designer':
         // No image sections on these pages — logo injection only
         break;
 
